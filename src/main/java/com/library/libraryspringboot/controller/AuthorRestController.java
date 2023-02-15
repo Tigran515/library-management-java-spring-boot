@@ -25,13 +25,13 @@ public class AuthorRestController {
         return authorService.addAuthor(author);
     }
 
-
-    @DeleteMapping("/delete/{fullName}")
-    void deleteAuthor(@PathVariable String fullName) {
-        String[] split = fullName.split("_");
-        String name = split[0];
-        String lname = split[1];
-        authorService.deleteAuthor(name,lname);
-    }
+//
+//    @DeleteMapping("/delete/{fullName}")
+//    void deleteAuthor(@PathVariable String fullName) {
+//        String[] split = fullName.split("_");
+//        String name = split[0];
+//        String lname = split[1];
+//        authorService.deleteAuthor(name,lname);
+//    }
 
 }
