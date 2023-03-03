@@ -21,11 +21,4 @@
         <appender-ref ref="CONSOLE"/>
     </root>
 
-<!--    <conversionRule conversionWord="purple" converterClass="org.springframework.boot.logging.logback.ColorConverter">-->
-<!--        <option foreground="#773895" />-->
-<!--    </conversionRule>-->
-<!--    <conversionRule conversionWord="green" converterClass="org.springframework.boot.logging.logback.ColorConverter">-->
-<!--        <option foreground="#0EAA00" />-->
-<!--    </conversionRule>-->
-
 </configuration>
