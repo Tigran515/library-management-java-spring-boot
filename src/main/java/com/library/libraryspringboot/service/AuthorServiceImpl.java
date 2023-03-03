@@ -1,10 +1,21 @@
 package com.library.libraryspringboot.service;
 
-import com.library.libraryspringboot.model.Author;
+import com.library.libraryspringboot.Tool.AuthorSpecification;
+import com.library.libraryspringboot.controller.exceptions.DataDuplicationException;
+import com.library.libraryspringboot.controller.exceptions.MethodInvalidArgumentException;
+import com.library.libraryspringboot.controller.exceptions.ResourceNotFoundException;
+import com.library.libraryspringboot.entity.Author;
 import com.library.libraryspringboot.repository.AuthorRepository;
+import dto.AuthorDTO;
+import jakarta.validation.*;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthorServiceImpl implements AuthorService {
@@ -15,29 +26,50 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<Author> get() {
-        return (List<Author>) authorRepository.findAll();
+    public List<AuthorDTO> getAllAuthors() {
+        List<Author> authors = (List<Author>) authorRepository.findAll();
+        return authors.stream().map(AuthorDTO::fromEntityToDTO).collect(Collectors.toList());
     }
 
     @Override
-    public Author addAuthor(Author author) {
-        return authorRepository.save(author);
+    public Optional<AuthorDTO> getAuthorById(@NotBlank Integer id) {
+        Optional<Author> author = authorRepository.findById(String.valueOf(id));
+        if (author.isEmpty()) {
+            throw new ResourceNotFoundException(String.format("Author with ID %s not found", (id)));
+        }
+        return author.stream().map(AuthorDTO::fromEntityToDTO).findFirst();
     }
 
     @Override
-    public List<Author> getAuthorByName(String name) {
-        return authorRepository.findAuthorByName(name);
+    public Author addAuthor(@Valid AuthorDTO author) {
+
+        if (authorRepository.existsAuthorByNameAndLnameAndSname(author.getName(), author.getLname(), author.getSname())) {
+            System.out.println("texekacnel client-in");
+            throw new DataDuplicationException("Author already exists");
+        }
+        Author saveAuthor = AuthorDTO.fromDTOToEntity(author);
+        return authorRepository.save(saveAuthor);
     }
 
     @Override
-    public void deleteAuthorByName(String name) {
-        List<Author> author = authorRepository.findAuthorByName(name);//@TODO: 1.add findAuthorByNameLname
-        authorRepository.deleteAll(author); // 2.change to delete(author)
+    public void deleteAuthorById(Integer id) {
+        Optional<Author> author = authorRepository.findById(String.valueOf(id));
+        if (author.isEmpty()) {
+            throw new ResourceNotFoundException(String.format("Author with ID %s not found", (id)));
+        }
+        authorRepository.deleteById(String.valueOf(id));
     }
 
     @Override
-    public void deleteAuthor(String name, String lname) {
-        Author author = authorRepository.findAuthorByNameAndLname(name, lname);
-        authorRepository.delete(author);
+    public List<AuthorDTO> findAuthorsByDetails(String detail) {  //TODO: look for @annotations
+        if (detail == null || detail.isBlank()) {
+            throw new MethodInvalidArgumentException("searched author's ID is null/blank");
+        }
+        List<Author> authors = authorRepository.findAll(new AuthorSpecification(detail));
+        if (authors.isEmpty()) {
+            System.out.println("inform the user --> no resul");
+        }
+        return authors.stream().map(AuthorDTO::fromEntityToDTO).collect(Collectors.toList());
     }
+
 }

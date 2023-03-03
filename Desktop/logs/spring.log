@@ -1,0 +1,39 @@
+2023-02-27T23:03:17.732+04:00  INFO 16172 --- [restartedMain] c.l.l.LibrarySpringBootApplication       : Starting LibrarySpringBootApplication using Java 18.0.2.1 with PID 16172 (C:\Users\tikot\IdeaProjects\library-spring-boot\target\classes started by tikot in C:\Users\tikot\IdeaProjects\library-spring-boot)
+2023-02-27T23:03:17.734+04:00  INFO 16172 --- [restartedMain] c.l.l.LibrarySpringBootApplication       : No active profile set, falling back to 1 default profile: "default"
+2023-02-27T23:03:17.782+04:00  INFO 16172 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-02-27T23:03:17.783+04:00  INFO 16172 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-02-27T23:03:18.342+04:00  INFO 16172 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2023-02-27T23:03:18.343+04:00  INFO 16172 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+2023-02-27T23:03:18.368+04:00  INFO 16172 --- [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.library.libraryspringboot.repository.AuthorRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2023-02-27T23:03:18.369+04:00  INFO 16172 --- [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.library.libraryspringboot.repository.BookRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2023-02-27T23:03:18.370+04:00  INFO 16172 --- [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.library.libraryspringboot.repository.BookAuthorRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2023-02-27T23:03:18.370+04:00  INFO 16172 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 24 ms. Found 0 JDBC repository interfaces.
+2023-02-27T23:03:18.378+04:00  INFO 16172 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2023-02-27T23:03:18.379+04:00  INFO 16172 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-02-27T23:03:18.403+04:00  INFO 16172 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 21 ms. Found 3 JPA repository interfaces.
+2023-02-27T23:03:18.877+04:00  INFO 16172 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8888 (http)
+2023-02-27T23:03:18.886+04:00  INFO 16172 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-02-27T23:03:18.887+04:00  INFO 16172 --- [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.5]
+2023-02-27T23:03:18.939+04:00  INFO 16172 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-02-27T23:03:18.940+04:00  INFO 16172 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1156 ms
+2023-02-27T23:03:19.041+04:00  INFO 16172 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-02-27T23:03:19.306+04:00  INFO 16172 --- [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3dcdab44
+2023-02-27T23:03:19.308+04:00  INFO 16172 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-02-27T23:03:19.340+04:00  INFO 16172 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-02-27T23:03:19.382+04:00  INFO 16172 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.1.6.Final
+2023-02-27T23:03:19.545+04:00  WARN 16172 --- [restartedMain] org.hibernate.orm.deprecation            : HHH90000021: Encountered deprecated setting [javax.persistence.sharedCache.mode], use [jakarta.persistence.sharedCache.mode] instead
+2023-02-27T23:03:19.716+04:00  INFO 16172 --- [restartedMain] SQL dialect                              : HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+2023-02-27T23:03:19.873+04:00  INFO 16172 --- [restartedMain] o.hibernate.id.enhanced.TableGenerator   : HHH000398: Explicit segment value for id generator [hibernate_sequences.sequence_name] suggested; using default [default]
+2023-02-27T23:03:20.371+04:00  INFO 16172 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-02-27T23:03:20.380+04:00  INFO 16172 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-02-27T23:03:20.666+04:00  WARN 16172 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-02-27T23:03:20.993+04:00  INFO 16172 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2023-02-27T23:03:21.027+04:00  INFO 16172 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8888 (http) with context path ''
+2023-02-27T23:03:21.035+04:00  INFO 16172 --- [restartedMain] c.l.l.LibrarySpringBootApplication       : Started LibrarySpringBootApplication in 3.67 seconds (process running for 4.238)
+2023-02-27T23:03:25.485+04:00  INFO 16172 --- [http-nio-8888-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-02-27T23:03:25.486+04:00  INFO 16172 --- [http-nio-8888-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2023-02-27T23:03:25.487+04:00  INFO 16172 --- [http-nio-8888-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2023-02-27T23:03:25.507+04:00  INFO 16172 --- [http-nio-8888-exec-2] c.l.l.controller.AuthorRestController    : HELOOOO
+2023-02-27T23:06:05.302+04:00  INFO 16172 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-02-27T23:06:05.304+04:00  INFO 16172 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-02-27T23:06:05.309+04:00  INFO 16172 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

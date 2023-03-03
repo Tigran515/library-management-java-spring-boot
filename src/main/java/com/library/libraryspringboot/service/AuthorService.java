@@ -1,15 +1,17 @@
 package com.library.libraryspringboot.service;
 
-import com.library.libraryspringboot.model.Author;
+import com.library.libraryspringboot.entity.Author;
+import dto.AuthorDTO;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AuthorService {
-    List<Author> get();
-    Author addAuthor(Author author);
-    List<Author> getAuthorByName(String name);
-    void deleteAuthorByName(@PathVariable String name); // TODO: add @RequestBody
-
-    void deleteAuthor(@PathVariable String name,@PathVariable String lname);
+    List<AuthorDTO> getAllAuthors();
+    Optional<AuthorDTO> getAuthorById(@PathVariable Integer id);
+    Author addAuthor(AuthorDTO author);
+    void deleteAuthorById(@PathVariable Integer id);
+    List<AuthorDTO> findAuthorsByDetails(@PathVariable String detail);
 }
