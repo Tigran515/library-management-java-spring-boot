@@ -10,11 +10,8 @@ import dto.AuthorDTO;
 import jakarta.validation.*;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
