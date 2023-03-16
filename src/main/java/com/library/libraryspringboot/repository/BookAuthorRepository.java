@@ -1,7 +1,6 @@
 package com.library.libraryspringboot.repository;
 
 import com.library.libraryspringboot.Tool.BookAuthorId;
-import com.library.libraryspringboot.entity.Author;
 import com.library.libraryspringboot.entity.BookAuthor;
 import org.springframework.data.repository.CrudRepository;
 
@@ -14,4 +13,8 @@ public interface BookAuthorRepository extends CrudRepository<BookAuthor, BookAut
 //    List<BookAuthor> findByCrossTableIdBookId(Integer id);
 //    List<Author> findByBook_Id(Integer bookId);
 //    List<BookAuthor> findByBook_Id(Integer bookId); // uncomment
+//    BookAuthor searchBookAuthorByBookAuthorId(String bookId, String authorId);
+//    boolean existsBookAuthorByBookIdAndAuthorId(String bookId, String authorId);
+    boolean existsBookAuthorByBookAuthorId(BookAuthorId bookAuthorId);
+//    boolean existsBookAuthorByBookAuthorIdContains(String bookId, String authorId);
 }

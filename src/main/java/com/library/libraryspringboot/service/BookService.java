@@ -14,4 +14,5 @@ public interface BookService {
     Optional<BookDTO> getBookById(@PathVariable Integer id);
     Book addBook(BookDTO book);
     void deleteBookById(@PathVariable Integer id);
+//    List<BookDTO> findBooksByDetails(String title,String ISBN);
 }

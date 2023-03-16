@@ -11,7 +11,7 @@ import java.util.Date;
 @RestControllerAdvice
 public class ApiExceptionHandler {
 
-    @ExceptionHandler(value = ResourceNotFoundException.class)
+    @ExceptionHandler(value = ResourceNotFoundException.class) //NoSuchElementException
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public ErrorMessage resourceNotFoundException(ResourceNotFoundException ex) {
         return new ErrorMessage(HttpStatus.NOT_FOUND.value(),
@@ -20,34 +20,16 @@ public class ApiExceptionHandler {
                 "Resource Not Found");
     }
 
-    @ExceptionHandler(value = ClassNotFoundException.class)
-    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorMessage classNotFoundException(ClassNotFoundException ex) {
-        return new ErrorMessage(HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                new Date(),
-                ex.getMessage(),
-                "Class Not Found On The Classpath");
-    }
-
-    @ExceptionHandler(value = InvocationTargetException.class)
-    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorMessage invocationTargetException(InvocationTargetException ex) {
-        return new ErrorMessage(HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                new Date(),
-                ex.getMessage(),
-                "Failed To Invoke Method or Constructor");
-    }
-
     @ExceptionHandler(value = MethodInvalidArgumentException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ErrorMessage methodInvalidArgumentException(MethodInvalidArgumentException ex) {
+    public ErrorMessage methodInvalidArgumentException(MethodInvalidArgumentException ex) { //@TODO remove , use JAVA's
         return new ErrorMessage(HttpStatus.BAD_REQUEST.value(),
                 new Date(),
                 ex.getMessage(),
                 "User input arguments are not valid");
     }
 
-    @ExceptionHandler(value = DataDuplicationException.class)
+    @ExceptionHandler(value = DataDuplicationException.class) //DuplicateElementException
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorMessage dataDuplicationException(DataDuplicationException ex) {
         return new ErrorMessage(HttpStatus.INTERNAL_SERVER_ERROR.value(),

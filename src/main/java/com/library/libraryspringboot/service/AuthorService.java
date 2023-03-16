@@ -11,5 +11,5 @@ public interface AuthorService {
     Optional<AuthorDTO> getAuthorById( Integer id);
     Author addAuthor(AuthorDTO author);
     void deleteAuthorById( Integer id);
-    List<AuthorDTO> findAuthorsByDetails(String detail);
+//    List<AuthorDTO> findAuthorsByDetails(String name,String lname,String sname);
 }

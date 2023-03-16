@@ -1,10 +1,9 @@
 package com.library.libraryspringboot.controller;
 
-import com.library.libraryspringboot.controller.exceptions.MethodInvalidArgumentException;
+import com.library.libraryspringboot.Tool.SearchCriteria;
 import com.library.libraryspringboot.entity.Book;
 import com.library.libraryspringboot.service.BookService;
 import dto.BookDTO;
-import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +18,7 @@ public class BookRestController {
         this.bookService = bookService;
     }
 
-    @GetMapping
+    @GetMapping("/all")
     List<BookDTO> getAllBooks() {
         return bookService.getAllBooks();
     }
@@ -28,6 +27,12 @@ public class BookRestController {
     Optional<BookDTO> getBookById(@PathVariable Integer id) {
         return bookService.getBookById(id);
     }
+
+//    @GetMapping("/search")
+//    List<BookDTO> getByDetail(@RequestBody SearchCriteria detail) {
+//        //@TODO: add validation
+//        return bookService.findBooksByDetails(detail.getBookTitle(), detail.getISBN());
+//    }
 
     @PostMapping("/add")
     Book post(@RequestBody BookDTO book) {

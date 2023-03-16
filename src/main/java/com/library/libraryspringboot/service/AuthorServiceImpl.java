@@ -10,6 +10,7 @@ import dto.AuthorDTO;
 import jakarta.validation.*;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -57,16 +58,19 @@ public class AuthorServiceImpl implements AuthorService {
         authorRepository.deleteById(String.valueOf(id));
     }
 
-    @Override
-    public List<AuthorDTO> findAuthorsByDetails(String detail) {  //TODO: look for @annotations
-        if (detail == null || detail.isBlank()) {
-            throw new MethodInvalidArgumentException("searched author's ID is null/blank");
-        }
-        List<Author> authors = authorRepository.findAll(new AuthorSpecification(detail));
-        if (authors.isEmpty()) {
-            System.out.println("inform the user --> no resul");
-        }
-        return authors.stream().map(AuthorDTO::fromEntityToDTO).collect(Collectors.toList());
-    }
+//    @Override
+//    public List<AuthorDTO> findAuthorsByDetails(String name, String lname, String sname) {  //TODO: look for @annotations
+////        if ((name == null || name.isBlank()) && (lname == null || lname.isBlank()) && (sname == null || sname.isBlank())) {
+////            //throw new MethodInvalidArgumentException("author's inputs are not valid");
+////        return null;
+////        }
+//        List<Author> authors = authorRepository.findAll(new AuthorSpecification(name, lname, sname));
+//        if (authors.isEmpty()) {
+//            System.out.println("inform the user --> no resul");
+//            throw new MethodInvalidArgumentException("searched author(s) does not exist");
+//        }
+//
+//        return authors.stream().map(AuthorDTO::fromEntityToDTO).collect(Collectors.toList());
+//    }
 
 }
