@@ -1,9 +1,7 @@
 package com.library.libraryspringboot.controller;
 
-import com.library.libraryspringboot.Tool.SearchCriteria;
 import com.library.libraryspringboot.entity.Book;
 import com.library.libraryspringboot.service.BookService;
-import dto.BookDTO;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,12 +17,12 @@ public class BookRestController {
     }
 
     @GetMapping("/all")
-    List<BookDTO> getAllBooks() {
+    List<dto.BookDTO> getAllBooks() {
         return bookService.getAllBooks();
     }
 
     @GetMapping("/id/{id}")
-    Optional<BookDTO> getBookById(@PathVariable Integer id) {
+    Optional<dto.BookDTO> getBookById(@PathVariable Integer id) {
         return bookService.getBookById(id);
     }
 
@@ -35,8 +33,8 @@ public class BookRestController {
 //    }
 
     @PostMapping("/add")
-    Book post(@RequestBody BookDTO book) {
-        return bookService.addBook(book);
+    Book post(@RequestBody dto.BookDTO bookDTO) {
+        return bookService.addBook(bookDTO);
     }
 
     @DeleteMapping("/delete/{id}")

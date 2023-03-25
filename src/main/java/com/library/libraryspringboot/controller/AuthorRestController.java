@@ -2,9 +2,8 @@ package com.library.libraryspringboot.controller;
 
 //import com.library.libraryspringboot.controller.exceptions.MethodInvalidArgumentException;
 
-import com.library.libraryspringboot.Tool.SearchCriteria;
-import dto.AuthorDTO;
 //import io.swagger.v3.oas.annotations.
+import dto.AuthorDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -59,8 +58,8 @@ public class AuthorRestController {
 //    }
 
     @PostMapping("/add")
-    Author post(@RequestBody @Valid AuthorDTO author) { // In Spring Boot, by default, unknown properties in JSON requests are simply ignored, and no exception is thrown.
-        return authorService.addAuthor(author);
+    Author post(@RequestBody @Valid AuthorDTO authorDTO) { // In Spring Boot, by default, unknown properties in JSON requests are simply ignored, and no exception is thrown.
+        return authorService.addAuthor(authorDTO);
     }
 
     @DeleteMapping("/delete/{id}")

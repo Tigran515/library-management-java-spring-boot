@@ -32,16 +32,18 @@ public class AuthorSpecification implements Specification<Author> {
     private final String name;
     private final String lname;
     private final String sname;
+    //private final SearchCriteria detail add getter/setter
 
-//    public AuthorSpecification(SearchCriteria detail){ // may be a solution
-//        this.name = detail.getAuthorName();
-//        this.lname = detail.getAuthorLname();
-//        this.sname = detail.getAuthorSname();
-//    }
     public AuthorSpecification(String name, String lname, String sname) {
         this.name = name;
         this.lname = lname;
         this.sname = sname;
+    }
+
+    public AuthorSpecification(SearchCriteria detail){ // may be a solution
+        this.name = detail.getAuthorName();
+        this.lname = detail.getAuthorLname();
+        this.sname = detail.getAuthorSname();
     }
 
     @Override

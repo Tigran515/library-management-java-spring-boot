@@ -8,8 +8,8 @@ import java.util.Optional;
 
 public interface AuthorService {
     List<AuthorDTO> getAllAuthors();
-    Optional<AuthorDTO> getAuthorById( Integer id);
-    Author addAuthor(AuthorDTO author);
+    Optional<AuthorDTO> getAuthorById(Integer id);
+    Author addAuthor(AuthorDTO authorDTO);
     void deleteAuthorById( Integer id);
 //    List<AuthorDTO> findAuthorsByDetails(String name,String lname,String sname);
 }

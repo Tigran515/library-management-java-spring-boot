@@ -1,5 +1,6 @@
 package com.library.libraryspringboot.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.library.libraryspringboot.Tool.BookAuthorId;
 import jakarta.persistence.*;
 import org.springframework.data.relational.core.sql.In;

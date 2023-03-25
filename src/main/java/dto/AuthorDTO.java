@@ -7,8 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,13 +27,5 @@ public class AuthorDTO  { // added Serializable for bytecode conv.
         this.lname = author.getLname();
         this.sname = author.getSname();
         this.born = author.getBorn();
-    }
-
-    public static AuthorDTO fromEntityToDTO(Author author) {
-        return new AuthorDTO(author);
-    }
-
-    public static Author fromDTOToEntity(AuthorDTO authorDTO) {
-        return new Author(authorDTO.getName(), authorDTO.lname, authorDTO.sname, authorDTO.getBorn());
     }
 }

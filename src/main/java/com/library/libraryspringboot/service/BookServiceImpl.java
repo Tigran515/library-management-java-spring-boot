@@ -1,12 +1,11 @@
 package com.library.libraryspringboot.service;
 
-import com.library.libraryspringboot.Tool.BookrSpecification;
+import com.library.libraryspringboot.Tool.BookConverter;
 import com.library.libraryspringboot.controller.exceptions.DataDuplicationException;
-import com.library.libraryspringboot.controller.exceptions.MethodInvalidArgumentException;
 import com.library.libraryspringboot.controller.exceptions.ResourceNotFoundException;
 import com.library.libraryspringboot.entity.Book;
 import com.library.libraryspringboot.repository.BookRepository;
-import dto.BookDTO;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,34 +15,39 @@ import java.util.stream.Collectors;
 @Service
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
+    private ModelMapper modelMapper;
+    private final BookConverter bookConverter;
 
-    public BookServiceImpl(BookRepository bookRepository) {
+    public BookServiceImpl(BookRepository bookRepository, BookConverter bookConverter) {
         this.bookRepository = bookRepository;
+        this.bookConverter = bookConverter;
     }
 
     @Override
-    public List<BookDTO> getAllBooks() {
+    public List<dto.BookDTO> getAllBooks() {
         List<Book> books = (List<Book>) bookRepository.findAll();
-        return books.stream().map(BookDTO::fromEntityToDTO).collect(Collectors.toList());
+        if (books.isEmpty()){
+            throw new ResourceNotFoundException("no Book data is available");
+        }
+        return books.stream().map(bookConverter::fromEntityToDto).collect(Collectors.toList());
     }
 
     @Override
-    public Optional<BookDTO> getBookById(Integer id) {
+    public Optional<dto.BookDTO> getBookById(Integer id) {
         Optional<Book> book = bookRepository.findById(String.valueOf(id));
         if (book.isEmpty()) {
             throw new ResourceNotFoundException(String.format("Author with ID %s not found", (id)));
         }
-        return book.stream().map(BookDTO::fromEntityToDTO).findFirst();
+        return book.stream().map(bookConverter::fromEntityToDto).findFirst();
     }
 
     @Override
-    public Book addBook(BookDTO book) {
-        if (bookRepository.existsBookByTitleAndISBN(book.getTitle(), book.getISBN())) {
-            System.out.println("texekacnel client-in");
+    public Book addBook(dto.BookDTO bookDTO) {
+        if (bookRepository.existsBookByTitleAndISBN(bookDTO.getTitle(), bookDTO.getISBN())) {
             throw new DataDuplicationException("Book already exists");
         }
-        Book saveBook = BookDTO.fromDTOToEntity(book);
-        System.out.println(saveBook.getId());
+        Book saveBook = bookConverter.fromDtoToEntity(bookDTO);
+//        System.out.println(saveBook.getId());
         return bookRepository.save(saveBook);
     }
 

@@ -1,8 +1,6 @@
 package com.library.libraryspringboot.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import org.springframework.data.relational.core.sql.In;
 
 @Entity
 @Table(name = "book")
@@ -12,7 +10,7 @@ public class Book {
     private Integer id;
     private String title;
     private Integer published;
-    private String ISBN;  //@TODO: change to char?
+    private String ISBN;
 
     public Book() {
 

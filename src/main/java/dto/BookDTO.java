@@ -1,6 +1,5 @@
 package dto;
 
-import com.library.libraryspringboot.entity.Author;
 import com.library.libraryspringboot.entity.Book;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -22,13 +21,5 @@ public class BookDTO {
         this.title = book.getTitle();
         this.published = book.getPublished();
         this.ISBN = book.getISBN();
-    }
-
-    public static BookDTO fromEntityToDTO(Book book) {
-        return new BookDTO(book);
-    }
-
-    public static Book fromDTOToEntity(BookDTO bookDTO) {
-        return new Book(bookDTO.getTitle(), bookDTO.getPublished(), bookDTO.getISBN());
     }
 }

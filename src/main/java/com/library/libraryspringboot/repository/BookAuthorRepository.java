@@ -1,7 +1,9 @@
 package com.library.libraryspringboot.repository;
 
 import com.library.libraryspringboot.Tool.BookAuthorId;
+import com.library.libraryspringboot.entity.Book;
 import com.library.libraryspringboot.entity.BookAuthor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -16,5 +18,8 @@ public interface BookAuthorRepository extends CrudRepository<BookAuthor, BookAut
 //    BookAuthor searchBookAuthorByBookAuthorId(String bookId, String authorId);
 //    boolean existsBookAuthorByBookIdAndAuthorId(String bookId, String authorId);
     boolean existsBookAuthorByBookAuthorId(BookAuthorId bookAuthorId);
-//    boolean existsBookAuthorByBookAuthorIdContains(String bookId, String authorId);
+
+//        @Query("SELECT ba FROM BookAuthor ba WHERE ba.bookAuthorId.bookId = ?1")
+    @Query("SELECT ba FROM BookAuthor ba JOIN FETCH ba.bookAuthorId.authorId a WHERE ba.bookAuthorId.bookId = ?1")
+    List<BookAuthor> findBookAuthorByBookId(Book id);
 }
