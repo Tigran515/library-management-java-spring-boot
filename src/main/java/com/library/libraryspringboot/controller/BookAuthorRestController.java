@@ -32,17 +32,17 @@ public class BookAuthorRestController {
     }
 
     @GetMapping("/search")
-    List<Object> getAdvancedSearch(@RequestBody SearchCriteria detail) {
+    <T> T getAdvancedSearch(@RequestBody SearchCriteria detail) {
 //        if (detail.isEmpty()) {
 //            throw new MethodInvalidArgumentException("search inputs are empty");
 //        }
         return bookAuthorService.findBooksAndAuthorsByCriteria(detail);
     }
 
-    @GetMapping("/id/{id}")
-    List<BookAuthorDTO> getBookAuthorByBookId(@PathVariable Book id) {
-        return bookAuthorService.getBookAuthorByBookId(id);
-    }
+//    @GetMapping("/id/{id}")
+//    List<BookAuthorDTO> getBookAuthorByBookId(@PathVariable Book id) {
+//        return bookAuthorService.getBookAuthorByBookId(id);
+//    }
 
 //    @GetMapping("/id/{id}")
 //    List<BookAuthor> getAuthorByBookId(@PathVariable(required = false) Integer id) {  // uncomment

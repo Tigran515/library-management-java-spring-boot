@@ -5,9 +5,11 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BookRepository extends CrudRepository<Book, String> {
     List<Book> findAll(Specification<Book> specification);
     boolean existsBookByTitleAndISBN(String title, String isbn);
-//    boolean existsBookByTitleOrISBN(String title, String ISBN);
+    //    boolean existsBookByTitleOrISBN(String title, String ISBN);
+    Optional<Book> findBookByISBN(String isbn);
 }

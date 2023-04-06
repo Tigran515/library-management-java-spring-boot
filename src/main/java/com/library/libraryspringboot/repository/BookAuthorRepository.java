@@ -1,8 +1,11 @@
 package com.library.libraryspringboot.repository;
 
 import com.library.libraryspringboot.Tool.BookAuthorId;
+import com.library.libraryspringboot.entity.Author;
 import com.library.libraryspringboot.entity.Book;
 import com.library.libraryspringboot.entity.BookAuthor;
+import dto.BookAuthorDTO;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -17,9 +20,13 @@ public interface BookAuthorRepository extends CrudRepository<BookAuthor, BookAut
 //    List<BookAuthor> findByBook_Id(Integer bookId); // uncomment
 //    BookAuthor searchBookAuthorByBookAuthorId(String bookId, String authorId);
 //    boolean existsBookAuthorByBookIdAndAuthorId(String bookId, String authorId);
-    boolean existsBookAuthorByBookAuthorId(BookAuthorId bookAuthorId);
 
-//        @Query("SELECT ba FROM BookAuthor ba WHERE ba.bookAuthorId.bookId = ?1")
+    List<BookAuthor> findAll(Specification<BookAuthor> specification);
+
+    //        @Query("SELECT ba FROM BookAuthor ba WHERE ba.bookAuthorId.bookId = ?1")
     @Query("SELECT ba FROM BookAuthor ba JOIN FETCH ba.bookAuthorId.authorId a WHERE ba.bookAuthorId.bookId = ?1")
-    List<BookAuthor> findBookAuthorByBookId(Book id);
+    Optional<BookAuthor> findBookAuthorByBookId(Book id);
+
+    @Query("SELECT ba FROM BookAuthor ba JOIN FETCH ba.bookAuthorId.authorId a WHERE ba.bookAuthorId.bookId = ?1")
+    List<BookAuthor> findAllBookAuthorByBookId(Book id);
 }

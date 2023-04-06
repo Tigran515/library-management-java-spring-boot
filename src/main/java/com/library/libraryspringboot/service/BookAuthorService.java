@@ -10,10 +10,10 @@ import java.util.Optional;
 
 public interface BookAuthorService {
     List<BookAuthorDTO> getAll();
-    List<Object> findBooksAndAuthorsByCriteria(SearchCriteria detail); // advanced search method
+    <T> T findBooksAndAuthorsByCriteria(SearchCriteria detail); // advanced search method
     //    Optional<CrossTable> getById(String id);
 //    Iterable<Author> getAuthorsByBookId(Integer bookId);
 //    List<Author> getAuthorByBookId(@PathVariable Integer bookId);
 //    List<BookAuthor> getAuthorByBookId(Integer id); //@TODO uncomment
-    List<BookAuthorDTO> getBookAuthorByBookId(Book id);
+//    Optional<Book> getBookByISBN(String isbn);
 }
