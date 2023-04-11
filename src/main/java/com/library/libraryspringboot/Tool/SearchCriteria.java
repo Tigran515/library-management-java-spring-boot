@@ -6,6 +6,7 @@ public class SearchCriteria {
     private String authorSname;
     private String bookTitle;
     private String isbn;
+    private String detail;
 
     public String getAuthorName() {
         return authorName;
@@ -27,4 +28,7 @@ public class SearchCriteria {
         return isbn;
     }
 
+    public String getDetail() {
+        return detail;
+    }
 }

@@ -1,8 +1,5 @@
 package com.library.libraryspringboot.controller;
 
-//import com.library.libraryspringboot.controller.exceptions.MethodInvalidArgumentException;
-
-//import io.swagger.v3.oas.annotations.
 import dto.AuthorDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -12,9 +9,9 @@ import org.slf4j.Logger;
 import com.library.libraryspringboot.entity.Author;
 import com.library.libraryspringboot.service.AuthorService;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -26,41 +23,43 @@ public class AuthorRestController {
     public AuthorRestController(AuthorService authorService) {
         this.authorService = authorService;
     }
-    @Operation(summary = "Get authors", description = "Get a list of authors")
+
+    @Operation(summary = "Get authors", description = "Get a list of authors (paginated)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found the authors")
     })
-    @GetMapping("/all")
-    List<AuthorDTO> get() {
-        return authorService.getAllAuthors();
+
+    public Page<AuthorDTO> getAllAuthors(
+            @RequestParam(defaultValue = "0") final Integer pageNumber,//offset
+            @RequestParam(defaultValue = "200") final Integer size//limit
+    ) {
+        return authorService.getAllAuthors(pageNumber, size);
     }
 
-    @GetMapping("/id/{id}")
+    @Operation(summary = "Get author by ID", description = "Get an author by it's ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "found the author by ID")
+    })
+
+    @GetMapping("/author/{id}")
     Optional<AuthorDTO> getAuthorById(@PathVariable Integer id) {
         return authorService.getAuthorById(id);
     }
-//
-//    @GetMapping("/search/{detail}")
-//    List<AuthorDTO> getByDetail(@PathVariable(required = false) String detail) { //which one to use ? ⬇
-//        if (detail == null || detail.isBlank()) {
-//            System.err.println("null"); // error message is alerted
-//        }
-//        return authorService.findAuthorsByDetails(detail);
-//    }
 
-//    @GetMapping("/search")
-//    List<AuthorDTO> getByDetail(@RequestBody SearchCriteria detail) { // which one to use ? (probably this one) ⬆
-////        String search = name.getName();
-////        if (search == null || search.isBlank()) {
-////            System.out.println("null"); // error message is alerted
-////        } @TODO: add validation
-//        return authorService.findAuthorsByDetails(detail.getAuthorName(),detail.getAuthorLname(),detail.getAuthorSname());
-//    }
+    @Operation(summary = "Add an author", description = "Add a new author data")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "new author data has been added")
+    })
 
     @PostMapping("/add")
     Author post(@RequestBody @Valid AuthorDTO authorDTO) { // In Spring Boot, by default, unknown properties in JSON requests are simply ignored, and no exception is thrown.
         return authorService.addAuthor(authorDTO);
     }
+
+    @Operation(summary = "Delete an author", description = "Delete an author by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "author deleted")
+    })
 
     @DeleteMapping("/delete/{id}")
     void deleteById(@PathVariable Integer id) {

@@ -79,7 +79,6 @@
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
-                <!--  TODO: fix -->
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>

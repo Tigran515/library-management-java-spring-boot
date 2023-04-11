@@ -1,19 +1,16 @@
 package com.library.libraryspringboot.service;
 
+import com.library.libraryspringboot.Tool.BookAuthorId;
 import com.library.libraryspringboot.Tool.SearchCriteria;
+import com.library.libraryspringboot.entity.Author;
 import com.library.libraryspringboot.entity.Book;
 import com.library.libraryspringboot.entity.BookAuthor;
 import dto.BookAuthorDTO;
+import org.springframework.data.domain.Page;
 
-import java.util.List;
-import java.util.Optional;
 
 public interface BookAuthorService {
-    List<BookAuthorDTO> getAll();
     <T> T findBooksAndAuthorsByCriteria(SearchCriteria detail); // advanced search method
-    //    Optional<CrossTable> getById(String id);
-//    Iterable<Author> getAuthorsByBookId(Integer bookId);
-//    List<Author> getAuthorByBookId(@PathVariable Integer bookId);
-//    List<BookAuthor> getAuthorByBookId(Integer id); //@TODO uncomment
-//    Optional<Book> getBookByISBN(String isbn);
+    Page<BookAuthorDTO> getAllBooksAndAuthors(final Integer pageNumber, final Integer size);
+    BookAuthor addBookAuthor(Book book, Author author); //@TODO change 
 }

@@ -14,11 +14,13 @@ public class BookAuthor {
     public BookAuthor() {
     }
 
+    public BookAuthor(BookAuthorId bookAuthorId) {
+        this.bookAuthorId = bookAuthorId;
+    }
+
     public BookAuthorId getBookAuthorId() {
         return bookAuthorId;
     }
 
-//    public BookAuthor(BookAuthorId bookAuthorId) {
-//        this.bookAuthorId = bookAuthorId;
-//    }
+
 }

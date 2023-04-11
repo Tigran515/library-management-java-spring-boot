@@ -7,6 +7,7 @@ import com.library.libraryspringboot.service.AuthorService;
 import com.library.libraryspringboot.service.BookAuthorService;
 import com.library.libraryspringboot.service.BookService;
 import dto.BookAuthorDTO;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,18 +18,16 @@ import java.util.Optional;
 
 public class BookAuthorRestController {
     private final BookAuthorService bookAuthorService;
-    private BookService bookService;
-    private AuthorService authorService;
 
-    public BookAuthorRestController(BookAuthorService bookAuthorService, BookService bookService, AuthorService authorService) {
+    public BookAuthorRestController(BookAuthorService bookAuthorService) {
         this.bookAuthorService = bookAuthorService;
-        this.bookService = bookService;
-        this.authorService = authorService;
+
     }
 
     @GetMapping("/all")
-    List<BookAuthorDTO> getAll() {
-        return bookAuthorService.getAll();
+    Page<BookAuthorDTO> getAll(@RequestParam(defaultValue = "0") final Integer pageNumber,
+                               @RequestParam(defaultValue = "3") final Integer size) {
+        return bookAuthorService.getAllBooksAndAuthors(pageNumber, size);
     }
 
     @GetMapping("/search")

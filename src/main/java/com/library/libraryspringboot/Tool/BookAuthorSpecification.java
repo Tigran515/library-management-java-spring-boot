@@ -44,6 +44,17 @@ private SearchCriteria detail;
             predicates.add(builder.like(builder.lower(authorJoin.get("sname")), "%" + detail.getAuthorSname().toLowerCase() + "%"));
         }
 
+        if(detail.getDetail()!=null){
+            String searchQuery = "%" + detail.getDetail().toLowerCase() + "%";
+            Predicate bookTitlePredicate = builder.like(builder.lower(bookJoin.get("title")), searchQuery);
+            Predicate authorNamePredicate = builder.like(builder.lower(authorJoin.get("name")), searchQuery);
+            Predicate authorLnamePredicate = builder.like(builder.lower(authorJoin.get("lname")), searchQuery);
+            Predicate authorSnamePredicate = builder.like(builder.lower(authorJoin.get("sname")), searchQuery);
+
+            Predicate anyMatchPredicate = builder.or(bookTitlePredicate, authorNamePredicate, authorLnamePredicate, authorSnamePredicate);
+            predicates.add(anyMatchPredicate);
+        }
+
         return builder.and(predicates.toArray(new Predicate[0]));
     }
 }

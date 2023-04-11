@@ -2,14 +2,12 @@ package com.library.libraryspringboot.service;
 
 import com.library.libraryspringboot.entity.Author;
 import dto.AuthorDTO;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
 import java.util.Optional;
 
 public interface AuthorService {
-    List<AuthorDTO> getAllAuthors();
+    Page<AuthorDTO> getAllAuthors(final Integer pageNumber, final Integer size);
     Optional<AuthorDTO> getAuthorById(Integer id);
     Author addAuthor(AuthorDTO authorDTO);
     void deleteAuthorById( Integer id);
-//    List<AuthorDTO> findAuthorsByDetails(String name,String lname,String sname);
 }
