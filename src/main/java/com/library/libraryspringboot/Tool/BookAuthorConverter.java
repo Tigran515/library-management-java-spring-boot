@@ -12,13 +12,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class BookAuthorConverter {
-
     private final ModelMapper modelMapper;
-
-    @Autowired
     private BookConverter bookConverter;
-
-    @Autowired
     private AuthorConverter authorConverter;
 
     public BookAuthorConverter() {
