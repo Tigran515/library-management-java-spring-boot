@@ -7,9 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 @Data
-//@NoArgsConstructor
-//@AllArgsConstructor
-public class AuthorDTO  { // added Serializable for bytecode conv.
+public class AuthorDTO  {
     @Null(message = "The ID field must be null in the POST request")
     private String id;
 
