@@ -1,30 +1,31 @@
 package com.library.libraryspringboot.controller;
 
 import com.library.libraryspringboot.Tool.BookAuthorRequest;
-import com.library.libraryspringboot.entity.Book;
-import com.library.libraryspringboot.entity.BookAuthor;
 import com.library.libraryspringboot.service.BookService;
-import dto.AuthorDTO;
+import dto.BookAuthorDTO;
 import dto.BookDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/book")
+@RequestMapping(value = "/books")
 public class BookRestController {
     private final BookService bookService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(BookRestController.class);
+    private HttpServletRequest httpServletRequest;
 
-    public BookRestController(BookService bookService) {
+    public BookRestController(BookService bookService, HttpServletRequest httpServletRequest) {
         this.bookService = bookService;
+        this.httpServletRequest = httpServletRequest;
     }
 
     @Operation(summary = "Get books", description = "Get a list of books (paginated)")
@@ -32,12 +33,14 @@ public class BookRestController {
             @ApiResponse(responseCode = "200", description = "Found the books")
     })
 
-    @GetMapping("/all")
-    Page<BookDTO> getAllBooks(
-            @RequestParam(defaultValue = "0") final Integer pageNumber,
-            @RequestParam(defaultValue = "3") final Integer size
+    @GetMapping
+    Page<BookDTO> getBooks(
+            @RequestParam(defaultValue = "0") final Integer offset,
+            @RequestParam(defaultValue = "200") final Integer limit
     ) {
-        return bookService.getAllBooks(pageNumber, size);
+        String requestUrl = httpServletRequest.getRequestURL().toString();
+        LOGGER.info("Incoming HTTP GET request to [URL={}]", requestUrl);
+        return bookService.getBooks(offset, limit);
     }
 
     @Operation(summary = "Get book by ID", description = "Get a book by it's ID")
@@ -45,8 +48,10 @@ public class BookRestController {
             @ApiResponse(responseCode = "200", description = "found the book by ID")
     })
 
-    @GetMapping("/id/{id}")
-    Optional<BookDTO> getBookById(@PathVariable @NotNull Integer id) { //@NotNull added
+    @GetMapping("/book/{id}")
+    Optional<BookDTO> getBookById(@PathVariable Integer id) { //@TODO validate the Integer
+        String requestUrl = httpServletRequest.getRequestURL().toString();
+        LOGGER.info("Incoming HTTP GET request to [URL={}]", requestUrl);
         return bookService.getBookById(id);
     }
 
@@ -55,8 +60,10 @@ public class BookRestController {
             @ApiResponse(responseCode = "200", description = "new book data has been added")
     })
 
-    @PostMapping("/add")
-    BookAuthor post(@RequestBody @Valid BookAuthorRequest request) {
+    @PostMapping("/post")
+    BookAuthorDTO post(@RequestBody @Valid BookAuthorRequest request) {
+        String requestUrl = this.httpServletRequest.getRequestURL().toString();
+        LOGGER.info("Incoming HTTP POST request to [URL={}]", requestUrl);
         return bookService.addBook(request.getBookDTO(), request.getAuthorId());
     }
 
@@ -66,7 +73,9 @@ public class BookRestController {
     })
 
     @DeleteMapping("/delete/{id}")
-    void deleteById(@PathVariable Integer id) {
+    void deleteById(@PathVariable Integer id) { //@TODO validate the Integer
+        String requestUrl = httpServletRequest.getRequestURL().toString();
+        LOGGER.info("Incoming HTTP DELETE request to [URL={}]", requestUrl);
         bookService.deleteBookById(id);
     }
 }
