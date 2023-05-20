@@ -16,12 +16,13 @@ import java.util.Optional;
 public interface BookAuthorRepository extends JpaRepository<BookAuthor, BookAuthorId> {
     List<BookAuthor> findAll(Specification<BookAuthor> specification);
     Page<BookAuthor> findAll(final Pageable pageable);
-
     // Spring Data JPA Query Method written using the JPA Query Language (JPQL).
     @Query("SELECT ba FROM BookAuthor ba JOIN FETCH ba.bookAuthorId.authorId a WHERE ba.bookAuthorId.bookId = ?1")
-    Optional<BookAuthor> findBookAuthorByBookId(Book id);
+    Optional<BookAuthor> findBookAuthorByBookId(Book id); // @TODO change to DTO
 
     @Modifying //The @Modifying annotation is used to enhance the @Query annotation so that we can execute not only SELECT queries, but also INSERT, UPDATE, DELETE, and even DDL queries
     @Query("DELETE FROM BookAuthor ba WHERE ba.bookAuthorId.bookId = ?1")
     void deleteBookAuthorByBookId(Book id);
+
+    boolean existsBookAuthorByBookAuthorId(BookAuthorId bookAuthorId);
 }
