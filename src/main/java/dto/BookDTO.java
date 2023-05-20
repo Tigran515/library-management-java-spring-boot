@@ -30,4 +30,5 @@ public class BookDTO {
     public String toString() {
         return String.format("[title=%s,published=%s,ISBN=%s]", title, published, ISBN);
     }
+
 }
