@@ -1,33 +1,37 @@
 package com.library.libraryspringboot.controller;
 
 import com.library.libraryspringboot.Tool.SearchCriteria;
-import com.library.libraryspringboot.entity.Book;
-import com.library.libraryspringboot.entity.BookAuthor;
-import com.library.libraryspringboot.service.AuthorService;
 import com.library.libraryspringboot.service.BookAuthorService;
-import com.library.libraryspringboot.service.BookService;
 import dto.BookAuthorDTO;
+import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/bookAuthor")
 
 public class BookAuthorRestController {
     private final BookAuthorService bookAuthorService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(BookAuthorRestController.class);
+    private HttpServletRequest httpServletRequest;
 
-    public BookAuthorRestController(BookAuthorService bookAuthorService) {
+    public BookAuthorRestController(BookAuthorService bookAuthorService, HttpServletRequest httpServletRequest) {
         this.bookAuthorService = bookAuthorService;
+        this.httpServletRequest = httpServletRequest;
 
     }
 
-    @GetMapping("/all")
-    Page<BookAuthorDTO> getAll(@RequestParam(defaultValue = "0") final Integer pageNumber,
-                               @RequestParam(defaultValue = "3") final Integer size) {
-        return bookAuthorService.getAllBooksAndAuthors(pageNumber, size);
+    @GetMapping
+    Page<BookAuthorDTO> getAll(
+            @RequestParam(defaultValue = "0") final Integer offset,
+            @RequestParam(defaultValue = "200") final Integer limit) {
+
+        String requestUrl = httpServletRequest.getRequestURL().toString();
+        LOGGER.info("Incoming HTTP GET request to [URL={}]", requestUrl);
+        
+        return bookAuthorService.getBooksAndAuthors(offset, limit);
     }
 
     @GetMapping("/search")
@@ -37,15 +41,4 @@ public class BookAuthorRestController {
 //        }
         return bookAuthorService.findBooksAndAuthorsByCriteria(detail);
     }
-
-//    @GetMapping("/id/{id}")
-//    List<BookAuthorDTO> getBookAuthorByBookId(@PathVariable Book id) {
-//        return bookAuthorService.getBookAuthorByBookId(id);
-//    }
-
-//    @GetMapping("/id/{id}")
-//    List<BookAuthor> getAuthorByBookId(@PathVariable(required = false) Integer id) {  // uncomment
-//            return bookAuthorService.getAuthorByBookId(id);
-//
-//    }
 }

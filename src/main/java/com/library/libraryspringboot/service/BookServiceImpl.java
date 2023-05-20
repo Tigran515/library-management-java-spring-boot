@@ -3,11 +3,13 @@ package com.library.libraryspringboot.service;
 import com.library.libraryspringboot.Tool.BookConverter;
 import com.library.libraryspringboot.entity.Author;
 import com.library.libraryspringboot.entity.Book;
-import com.library.libraryspringboot.entity.BookAuthor;
 import com.library.libraryspringboot.repository.AuthorRepository;
 import com.library.libraryspringboot.repository.BookAuthorRepository;
 import com.library.libraryspringboot.repository.BookRepository;
+import dto.BookAuthorDTO;
 import dto.BookDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +27,7 @@ public class BookServiceImpl implements BookService {
     private final BookAuthorService bookAuthorService;
     private final AuthorRepository authorRepository;
     private final BookAuthorRepository bookAuthorRepository;
+    private static final Logger LOGGER = LoggerFactory.getLogger(BookServiceImpl.class);
 
     public BookServiceImpl(BookRepository bookRepository, BookConverter bookConverter, BookAuthorService bookAuthorService, AuthorRepository authorRepository, BookAuthorRepository bookAuthorRepository) {
         this.bookRepository = bookRepository;
@@ -35,58 +38,70 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Page<BookDTO> getAllBooks(Integer pageNumber, Integer size) {
-        Page<Book> books = bookRepository.findAll(PageRequest.of(pageNumber, size));
-        if (books.isEmpty()) {
-            throw new NoSuchElementException("No book data is available");
-        }
+    public Page<BookDTO> getBooks(Integer offset, Integer limit) {
+        Page<Book> books = bookRepository.findAll(PageRequest.of(offset, limit));
+        LOGGER.info("[count=" + books.getSize() + "] authors were found");
         return books.map(bookConverter::fromEntityToDto);
     }
 
     @Override
-    public Optional<BookDTO> getBookById(Integer id) {
+    public Optional<BookDTO> getBookById(Integer id) { //@TODO: 1.manage the argument validation
         Optional<Book> book = Optional.ofNullable(bookRepository.findById(String.valueOf(id))
-                .orElseThrow(() -> new NoSuchElementException(String.format("Book with ID %s not found", (id)))));
+                .orElseThrow(() -> {
+                    String errorMsg = "Book with [ID=" + id + "] was not found";
+                    LOGGER.error(errorMsg);
+                    return new NoSuchElementException(errorMsg);
+                }));
+        LOGGER.info("Book with [id=" + id + "] was found");
         return book.stream().map(bookConverter::fromEntityToDto).findFirst();
     }
 
     @Override
     @Transactional
-    public BookAuthorDTO addBook(BookDTO bookDTO, Integer authorId) {
-        Objects.requireNonNull(bookDTO, "BookDTO cannot be null");
-        Objects.requireNonNull(authorId, "Author ID cannot be null");
+    public BookAuthorDTO addBook(BookDTO bookDTO, Integer authorId) { //@TODO: 1.manage the authorId validation
+        Objects.requireNonNull(bookDTO, "BookDTO cannot be null"); // @TODO: remove or make it useful
+        Objects.requireNonNull(authorId, "Author ID cannot be null"); // @TODO: remove or make it useful
 
-        if (bookRepository.existsBookByTitleAndISBN(bookDTO.getTitle(), bookDTO.getISBN())) {
-            throw new DuplicateKeyException("Book already exists");
+        if (bookRepository.existsBookByISBN(bookDTO.getISBN())) { // existsBookByTitleAndISBN changed to existsBookByISBN
+            String errorMsg = "Book with [ISBN=" + bookDTO.getISBN()+ "] that you are trying to add already exists.";//for the future authorId will be replaced with author
+            LOGGER.error(errorMsg);
+            throw new DuplicateKeyException(errorMsg);
         }
         Book book = bookConverter.fromDtoToEntity(bookDTO);
-        book = bookRepository.save(book);
-        Author author = authorRepository.findById(authorId.toString()) // author's Repository is used instead of Service
-                .orElseThrow(() -> new NoSuchElementException(String.format("Author with ID %s not found", (authorId))));
+        bookRepository.save(book);
+        Author author = authorRepository.findById(authorId.toString())
+                .orElseThrow(() -> {
+                    String errorMsg = "Author with [ID=" + authorId + "] not found";
+                    LOGGER.error(errorMsg);
+                    return new NoSuchElementException(errorMsg);
+                });
+        BookAuthorDTO bookAuthorDTO = bookAuthorService.addBookAuthor(book, author);
+        LOGGER.info("Book with [id=" + book.getId() + "] was added");
 
-        return bookAuthorService.addBookAuthor(book, author);
+        return bookAuthorDTO;
     }
 
     @Override
     @Transactional
-    public void deleteBookById(Integer id) {
-//        Optional<Book> book = Optional.ofNullable(bookRepository.findById(String.valueOf(id)).orElseThrow(() -> new ResourceNotFoundException("Book with ID not found")));
-//        Optional<BookAuthor> bookAuthor = bookAuthorRepository.findBookAuthorByBookId(book.orElseThrow(() -> new ResourceNotFoundException("no bookAuthor found with this BookID")));
-//        bookRepository.deleteById(String.valueOf(id));
-//        bookAuthorRepository.deleteBookAuthorByBookId(book.orElseThrow(() -> new ResourceNotFoundException("Error while deleting the book")));
-////        Optional<Book> book = bookRepository.findById(String.valueOf(id));
-////        bookAuthorRepository.findBookAuthorByBookId(book.orElseThrow(() -> new ResourceNotFoundException("Book with ID not found "))); // ! what is checked here ? book is null or not
+    public void deleteBookById(Integer id) { //@TODO: 1.manage argument validation
+        Book book = bookRepository.findById(String.valueOf(id))
+                .orElseThrow(() ->
+                {
+                    String errorMsg = "Book with [ID=" + id + "] does not exists";
+                    LOGGER.error(errorMsg);
+                    return new NoSuchElementException(errorMsg);
+                });
+        bookAuthorRepository.findBookAuthorByBookId(book)
+                .orElseThrow(() ->
+                {
+                    String errorMsg = "Book with [ID= " + id + "] was not found";
+                    LOGGER.error(errorMsg);
+                    return new NoSuchElementException(errorMsg);
+                });
 
-        Optional<Book> book = bookRepository.findById(String.valueOf(id));
-        if (book.isEmpty()) {
-            throw new NoSuchElementException("Book with ID not found in books");
-        }
-
-        //@TODO: !fix findBookAuthorByBookId (BUG with Optional)
-        Optional<BookAuthor> bookAuthor = bookAuthorRepository.findBookAuthorByBookId(book.orElseThrow(() -> new NoSuchElementException("no such  book  exists in author")));
-        if(bookAuthor.isEmpty()){ // if statement is temporary here, it will be removed after the BUG will be handled out
-            throw new NoSuchElementException("Book with ID not found in book author");
-        }
+        bookRepository.deleteById(String.valueOf(id));
+        bookAuthorRepository.deleteBookAuthorByBookId(book);
+        LOGGER.info("Book with [ID=" + id + "] was removed");
     }
 
 }
