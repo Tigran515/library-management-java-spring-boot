@@ -20,5 +20,4 @@ public class AudienceValidator implements OAuth2TokenValidator<Jwt> {
         }
         return OAuth2TokenValidatorResult.failure(error);
     }
-
 }
