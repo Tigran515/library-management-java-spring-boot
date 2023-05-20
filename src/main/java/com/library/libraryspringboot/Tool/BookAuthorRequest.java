@@ -1,11 +1,9 @@
 package com.library.libraryspringboot.Tool;
 
 import dto.BookDTO;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.NonNull;
 
-public class BookAuthorRequest {
+public class BookAuthorRequest { //@TODO: are this type of validation annotations useful here?
     @NotNull(message = "In request the book is empty")
     private BookDTO bookDTO;
     @NotNull
