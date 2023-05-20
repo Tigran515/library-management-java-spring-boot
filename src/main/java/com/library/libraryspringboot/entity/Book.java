@@ -49,4 +49,9 @@ public class Book {
     public void setISBN(String ISBN) {
         this.ISBN = ISBN;
     }
+
+    @Override
+    public String toString() {
+        return String.format("[title=%s,published=%s,ISBN=%s]", title, published, ISBN);
+    }
 }
