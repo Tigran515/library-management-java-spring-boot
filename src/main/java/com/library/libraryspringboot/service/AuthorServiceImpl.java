@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -35,8 +36,12 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public Optional<AuthorDTO> getAuthorById(Integer id) {// @TODO: 1.manage the argument validation
+        if (id == null) {
+            LOGGER.info("Cannot find author with [id=" + id + "]");
+            throw new IllegalArgumentException("");
+        }
         Optional<Author> author = Optional.ofNullable(authorRepository.findById(String.valueOf(id))
-                .orElseThrow(() -> new java.util.NoSuchElementException("Author with ID " + id + " not found")));
+                .orElseThrow(() -> new NoSuchElementException("Author with ID " + id + " not found")));
         LOGGER.info("Author with [id=" + id + "] was found");
         return author.stream().map(authorConverter::fromEntityToDto).findFirst();
     }
@@ -56,14 +61,12 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public void deleteAuthorById(Integer id) { //@TODO: 1.manage argument validation
-        //@TODO: 2. delete data related to the author from book author also
-        Optional<Author> author = authorRepository.findById(String.valueOf(id));
+        Optional<Author> author = authorRepository.findById(String.valueOf(id)); //@TODO: 2. delete related data to the author from bookAuthor also (use @Cascade)
         if (author.isEmpty()) {
             // Do not waste JVM resources on creation of 1 time usage strings / 'resources'
             //String errorMsg = "Author with [ID=" + id + "] does not exist";
-            LOGGER.error(MessageFormat.format("Cannot delete user with non existing id: {0}", id));
+            LOGGER.error(MessageFormat.format("Cannot delete author with non existing [ID={0}]", id));
             return;
-//            throw new NoSuchElementException(errorMsg);
         }
         authorRepository.deleteById(String.valueOf(id));
         LOGGER.info("Author with [id=" + id + "] was deleted");
