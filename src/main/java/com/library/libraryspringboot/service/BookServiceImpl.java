@@ -45,7 +45,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Optional<BookDTO> getBookById(Integer id) { //@TODO: 1.manage the argument validation
+    public Optional<BookDTO> getBookById(Integer id) {
         Optional<Book> book = Optional.ofNullable(bookRepository.findById(String.valueOf(id))
                 .orElseThrow(() -> {
                     String errorMsg = "Book with [ID=" + id + "] was not found";
@@ -58,11 +58,11 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public BookAuthorDTO addBook(BookDTO bookDTO, Integer authorId) { //@TODO: 1.manage the authorId validation
-        Objects.requireNonNull(bookDTO, "BookDTO cannot be null"); // @TODO: remove or make it useful
-        Objects.requireNonNull(authorId, "Author ID cannot be null"); // @TODO: remove or make it useful
+    public BookAuthorDTO addBook(BookDTO bookDTO, Integer authorId) {
+        Objects.requireNonNull(bookDTO, "BookDTO cannot be null"); // @TODO: remove if not useful
+        Objects.requireNonNull(authorId, "Author ID cannot be null"); // @TODO: remove if not useful
 
-        if (bookRepository.existsBookByISBN(bookDTO.getISBN())) { // existsBookByTitleAndISBN changed to existsBookByISBN
+        if (bookRepository.existsBookByISBN(bookDTO.getISBN())) {
             String errorMsg = "Book with [ISBN=" + bookDTO.getISBN()+ "] that you are trying to add already exists.";//for the future authorId will be replaced with author
             LOGGER.error(errorMsg);
             throw new DuplicateKeyException(errorMsg);
@@ -83,7 +83,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public void deleteBookById(Integer id) { //@TODO: 1.manage argument validation
+    public void deleteBookById(Integer id) { //@TODO: IMPORTANT! 1.refactor the code to  RESTful convention by not returning any value 2.add argument validation
         Book book = bookRepository.findById(String.valueOf(id))
                 .orElseThrow(() ->
                 {
