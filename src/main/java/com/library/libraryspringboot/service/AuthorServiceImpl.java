@@ -12,7 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.NoSuchElementException;
+import java.text.MessageFormat;
 import java.util.Optional;
 
 @Service
@@ -59,9 +59,11 @@ public class AuthorServiceImpl implements AuthorService {
         //@TODO: 2. delete data related to the author from book author also
         Optional<Author> author = authorRepository.findById(String.valueOf(id));
         if (author.isEmpty()) {
-            String errorMsg = "Author with [ID=" + id + "] does not exist";
-            LOGGER.error(errorMsg);
-            throw new NoSuchElementException(errorMsg);
+            // Do not waste JVM resources on creation of 1 time usage strings / 'resources'
+            //String errorMsg = "Author with [ID=" + id + "] does not exist";
+            LOGGER.error(MessageFormat.format("Cannot delete user with non existing id: {0}", id));
+            return;
+//            throw new NoSuchElementException(errorMsg);
         }
         authorRepository.deleteById(String.valueOf(id));
         LOGGER.info("Author with [id=" + id + "] was deleted");
