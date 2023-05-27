@@ -22,5 +22,4 @@ public class ApplicationConfig implements WebMvcConfigurer {
                 .allowedMethods(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.DELETE.name())
                 .maxAge(86400);
     }
-
 }
