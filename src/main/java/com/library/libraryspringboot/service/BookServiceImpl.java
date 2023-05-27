@@ -98,7 +98,6 @@ public class BookServiceImpl implements BookService {
                     LOGGER.error(errorMsg);
                     return new NoSuchElementException(errorMsg);
                 });
-
         bookRepository.deleteById(String.valueOf(id));
         bookAuthorRepository.deleteBookAuthorByBookId(book);
         LOGGER.info("Book with [ID=" + id + "] was removed");
