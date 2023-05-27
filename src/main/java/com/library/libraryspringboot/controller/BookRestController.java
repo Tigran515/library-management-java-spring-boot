@@ -38,8 +38,7 @@ public class BookRestController {
             @RequestParam(defaultValue = "0") final Integer offset,
             @RequestParam(defaultValue = "200") final Integer limit
     ) {
-        String requestUrl = httpServletRequest.getRequestURL().toString();
-        LOGGER.info("Incoming HTTP GET request to [URL={}]", requestUrl);
+        LOGGER.info("Incoming HTTP GET request to [URL={}]", httpServletRequest.getRequestURL().toString());
         return bookService.getBooks(offset, limit);
     }
 
@@ -50,8 +49,7 @@ public class BookRestController {
 
     @GetMapping("/book/{id}")
     Optional<BookDTO> getBookById(@PathVariable Integer id) { //@TODO validate the Integer
-        String requestUrl = httpServletRequest.getRequestURL().toString();
-        LOGGER.info("Incoming HTTP GET request to [URL={}]", requestUrl);
+        LOGGER.info("Incoming HTTP GET request to [URL={}]", httpServletRequest.getRequestURL().toString());
         return bookService.getBookById(id);
     }
 
@@ -62,8 +60,7 @@ public class BookRestController {
 
     @PostMapping("/post")
     BookAuthorDTO post(@RequestBody @Valid BookAuthorRequest request) {
-        String requestUrl = this.httpServletRequest.getRequestURL().toString();
-        LOGGER.info("Incoming HTTP POST request to [URL={}]", requestUrl);
+        LOGGER.info("Incoming HTTP POST request to [URL={}]", this.httpServletRequest.getRequestURL().toString());
         return bookService.addBook(request.getBookDTO(), request.getAuthorId());
     }
 
@@ -74,8 +71,7 @@ public class BookRestController {
 
     @DeleteMapping("/delete/{id}")
     void deleteById(@PathVariable Integer id) { //@TODO validate the Integer
-        String requestUrl = httpServletRequest.getRequestURL().toString();
-        LOGGER.info("Incoming HTTP DELETE request to [URL={}]", requestUrl);
+        LOGGER.info("Incoming HTTP DELETE request to [URL={}]", httpServletRequest.getRequestURL().toString());
         bookService.deleteBookById(id);
     }
 }

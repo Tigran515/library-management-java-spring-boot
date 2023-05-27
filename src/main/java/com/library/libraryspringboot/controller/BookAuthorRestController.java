@@ -27,9 +27,7 @@ public class BookAuthorRestController {
     Page<BookAuthorDTO> getAll(
             @RequestParam(defaultValue = "0") final Integer offset,
             @RequestParam(defaultValue = "200") final Integer limit) {
-
-        String requestUrl = httpServletRequest.getRequestURL().toString();
-        LOGGER.info("Incoming HTTP GET request to [URL={}]", requestUrl);
+        LOGGER.info("Incoming HTTP GET request to [URL={}]", httpServletRequest.getRequestURL().toString());
         
         return bookAuthorService.getBooksAndAuthors(offset, limit);
     }

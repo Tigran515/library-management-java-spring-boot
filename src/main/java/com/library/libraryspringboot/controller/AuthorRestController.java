@@ -38,8 +38,7 @@ public class AuthorRestController {
             @RequestParam(defaultValue = "0") final Integer offset,
             @RequestParam(defaultValue = "200") final Integer limit
     ) {
-        String requestUrl = httpServletRequest.getRequestURL().toString();
-        LOGGER.info("Incoming HTTP GET request to [URL={}]", requestUrl);
+        LOGGER.info("Incoming HTTP GET request to [URL={}]", httpServletRequest.getRequestURL().toString());
         return authorService.getAuthors(offset, limit);
     }
 
@@ -50,8 +49,7 @@ public class AuthorRestController {
 
     @GetMapping("/author/{id}")
     Optional<AuthorDTO> getAuthorById(@PathVariable @Valid @Positive(message = "author id should be positive") Integer id) { //@TODO: make validation work here!
-        String requestUrl = httpServletRequest.getRequestURL().toString();
-        LOGGER.info("Incoming HTTP GET request to [URL={}]", requestUrl);
+        LOGGER.info("Incoming HTTP GET request to [URL={}]",  httpServletRequest.getRequestURL().toString());
         return authorService.getAuthorById(id);
     }
 
@@ -62,8 +60,7 @@ public class AuthorRestController {
 
     @PostMapping("/post")
     AuthorDTO post(@RequestBody @Valid AuthorDTO authorDTO) { // In Spring Boot, by default, unknown properties in JSON requests are simply ignored, and no exception is thrown.
-        String requestUrl = httpServletRequest.getRequestURL().toString();
-        LOGGER.info("Incoming HTTP POST request to [URL={}]", requestUrl);
+        LOGGER.info("Incoming HTTP POST request to [URL={}]", httpServletRequest.getRequestURL().toString());
         return authorService.addAuthor(authorDTO);
     }
 
@@ -74,8 +71,7 @@ public class AuthorRestController {
 
     @DeleteMapping("/delete/{id}")
     void deleteById(@PathVariable Integer id) { ///@TODO add validation here
-        String requestUrl = httpServletRequest.getRequestURL().toString();
-        LOGGER.info("Incoming HTTP DELETE request to [URL={}]", requestUrl);
+        LOGGER.info("Incoming HTTP DELETE request to [URL={}]", httpServletRequest.getRequestURL().toString());
         authorService.deleteAuthorById(id);
     }
 }
