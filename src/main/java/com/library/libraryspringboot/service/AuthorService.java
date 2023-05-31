@@ -9,4 +9,5 @@ public interface AuthorService {
     Optional<AuthorDTO> getAuthorById(Integer id);
     AuthorDTO addAuthor(AuthorDTO authorDTO);
     void deleteAuthorById(Integer id);
+    AuthorDTO updateAuthorFields(AuthorDTO updatedAuthor,Integer id);
 }
