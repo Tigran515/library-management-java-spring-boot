@@ -7,6 +7,7 @@ import dto.AuthorDTO;
 import jakarta.validation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -57,6 +58,15 @@ public class AuthorServiceImpl implements AuthorService {
         authorRepository.save(saveAuthor);
         LOGGER.info("Author was saved");
         return authorConverter.fromEntityToDto(saveAuthor);
+    }
+
+    @Override
+    public AuthorDTO updateAuthorFields(AuthorDTO updatedAuthorDTO, Integer id) {
+        Author existingAuthor = authorRepository.findById(String.valueOf(id)).orElseThrow(() -> new NoSuchElementException("ad"));
+        LOGGER.info("Author with [id=" + id + "] was found");
+        BeanUtils.copyProperties(updatedAuthorDTO, existingAuthor, "id");
+        Author author = authorRepository.save(existingAuthor);
+        return authorConverter.fromEntityToDto(author);
     }
 
     @Override
