@@ -49,7 +49,7 @@ public class AuthorRestController {
 
     @GetMapping("/author/{id}")
     Optional<AuthorDTO> getAuthorById(@PathVariable @Valid @Positive(message = "author id should be positive") Integer id) { //@TODO: make validation work here!
-        LOGGER.info("Incoming HTTP GET request to [URL={}]",  httpServletRequest.getRequestURL().toString());
+        LOGGER.info("Incoming HTTP GET request to [URL={}]", httpServletRequest.getRequestURL().toString());
         return authorService.getAuthorById(id);
     }
 
@@ -62,6 +62,16 @@ public class AuthorRestController {
     AuthorDTO post(@RequestBody @Valid AuthorDTO authorDTO) { // In Spring Boot, by default, unknown properties in JSON requests are simply ignored, and no exception is thrown.
         LOGGER.info("Incoming HTTP POST request to [URL={}]", httpServletRequest.getRequestURL().toString());
         return authorService.addAuthor(authorDTO);
+    }
+
+    @Operation(summary = "Update an author", description = "Update an existing author's data")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "author data has been updated")
+    })
+    @PatchMapping("/update/{id}")
+    AuthorDTO patch(@PathVariable Integer id, @RequestBody AuthorDTO updatedAuthorDTO) {
+        LOGGER.info("Incoming HTTP PATCH request to [URL={}]", httpServletRequest.getRequestURL().toString());
+        return authorService.updateAuthorFields(updatedAuthorDTO, id);
     }
 
     @Operation(summary = "Delete an author", description = "Delete an author by ID")
