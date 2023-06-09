@@ -5,6 +5,7 @@ import com.library.libraryspringboot.entity.Author;
 import com.library.libraryspringboot.repository.AuthorRepository;
 import dto.AuthorDTO;
 import jakarta.validation.*;
+import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -36,11 +37,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Optional<AuthorDTO> getAuthorById(Integer id) {// @TODO: 1.manage the argument validation
-        if (id == null) {
-            LOGGER.info("Cannot find author with [id=" + id + "]");
-            throw new IllegalArgumentException("");
-        }
+    public Optional<AuthorDTO> getAuthorById(@NotNull Integer id) {
         Optional<Author> author = Optional.ofNullable(authorRepository.findById(String.valueOf(id))
                 .orElseThrow(() -> new NoSuchElementException("Author with ID " + id + " not found")));
         LOGGER.info("Author with [id=" + id + "] was found");
@@ -61,8 +58,8 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public AuthorDTO updateAuthorFields(AuthorDTO updatedAuthorDTO, Integer id) {
-        Author existingAuthor = authorRepository.findById(String.valueOf(id)).orElseThrow(() -> new NoSuchElementException("ad"));
+    public AuthorDTO updateAuthorFields(AuthorDTO updatedAuthorDTO, @NotNull Integer id) {
+        Author existingAuthor = authorRepository.findById(String.valueOf(id)).orElseThrow(() -> new NoSuchElementException("Author with ID " + id + " not found"));
         LOGGER.info("Author with [id=" + id + "] was found");
         BeanUtils.copyProperties(updatedAuthorDTO, existingAuthor, "id");
         Author author = authorRepository.save(existingAuthor);
@@ -70,7 +67,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public void deleteAuthorById(Integer id) { //@TODO: 1.manage argument validation
+    public void deleteAuthorById(@NotNull Integer id) {
         Optional<Author> author = authorRepository.findById(String.valueOf(id)); //@TODO: 2. delete related data to the author from bookAuthor also (use @Cascade)
         if (author.isEmpty()) {
             // Do not waste JVM resources on creation of 1 time usage strings / 'resources'
@@ -83,3 +80,4 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
 }
+//@TODO: Research: do I need to add LOGGER.error in the .orElseThrow()
