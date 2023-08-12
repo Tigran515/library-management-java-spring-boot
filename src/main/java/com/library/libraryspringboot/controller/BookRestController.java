@@ -1,9 +1,9 @@
 package com.library.libraryspringboot.controller;
 
-import com.library.libraryspringboot.Tool.BookAuthorRequest;
+import com.library.libraryspringboot.tool.BookAuthorRequest;
 import com.library.libraryspringboot.service.BookService;
-import dto.BookAuthorDTO;
-import dto.BookDTO;
+import com.library.libraryspringboot.dto.BookAuthorDTO;
+import com.library.libraryspringboot.dto.BookDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -21,11 +22,11 @@ import java.util.Optional;
 public class BookRestController {
     private final BookService bookService;
     private static final Logger LOGGER = LoggerFactory.getLogger(BookRestController.class);
-    private HttpServletRequest httpServletRequest;
+    private final HttpServletRequest HTTP_SERVLET_REQUEST;
 
-    public BookRestController(BookService bookService, HttpServletRequest httpServletRequest) {
+    public BookRestController(BookService bookService, HttpServletRequest HTTP_SERVLET_REQUEST) {
         this.bookService = bookService;
-        this.httpServletRequest = httpServletRequest;
+        this.HTTP_SERVLET_REQUEST = HTTP_SERVLET_REQUEST;
     }
 
     @Operation(summary = "Get books", description = "Get a list of books (paginated)")
@@ -38,7 +39,7 @@ public class BookRestController {
             @RequestParam(defaultValue = "0") final Integer offset,
             @RequestParam(defaultValue = "200") final Integer limit
     ) {
-        LOGGER.info("Incoming HTTP GET request to [URL={}]", httpServletRequest.getRequestURL().toString());
+        LOGGER.info("Incoming HTTP GET request to [URL={}]", HTTP_SERVLET_REQUEST.getRequestURL().toString());
         return bookService.getBooks(offset, limit);
     }
 
@@ -49,7 +50,7 @@ public class BookRestController {
 
     @GetMapping("/book/{id}")
     Optional<BookDTO> getBookById(@PathVariable Integer id) { //@TODO validate the Integer
-        LOGGER.info("Incoming HTTP GET request to [URL={}]", httpServletRequest.getRequestURL().toString());
+        LOGGER.info("Incoming HTTP GET request to [URL={}]", HTTP_SERVLET_REQUEST.getRequestURL().toString());
         return bookService.getBookById(id);
     }
 
@@ -59,8 +60,8 @@ public class BookRestController {
     })
 
     @PostMapping("/post")
-    BookAuthorDTO post(@RequestBody @Valid BookAuthorRequest request) {
-        LOGGER.info("Incoming HTTP POST request to [URL={}]", this.httpServletRequest.getRequestURL().toString());
+    List<BookAuthorDTO> post(@RequestBody @Valid BookAuthorRequest request) {
+        LOGGER.info("Incoming HTTP POST request to [URL={}]", this.HTTP_SERVLET_REQUEST.getRequestURL().toString());
         return bookService.addBook(request.getBookDTO(), request.getAuthorId());
     }
 
@@ -71,7 +72,7 @@ public class BookRestController {
 
     @DeleteMapping("/delete/{id}")
     void deleteById(@PathVariable Integer id) { //@TODO validate the Integer
-        LOGGER.info("Incoming HTTP DELETE request to [URL={}]", httpServletRequest.getRequestURL().toString());
+        LOGGER.info("Incoming HTTP DELETE request to [URL={}]", HTTP_SERVLET_REQUEST.getRequestURL().toString());
         bookService.deleteBookById(id);
     }
 }
