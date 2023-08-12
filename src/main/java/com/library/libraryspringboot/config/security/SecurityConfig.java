@@ -1,67 +1,81 @@
 package com.library.libraryspringboot.config.security;
 
-import com.library.libraryspringboot.config.AudienceValidator;
+import com.library.libraryspringboot.config.security.jwt.JwtRequestFilter;
+import com.library.libraryspringboot.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
-import org.springframework.security.oauth2.core.OAuth2TokenValidator;
-import org.springframework.security.oauth2.jwt.*;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * Configures our application with Spring Security to restrict access to our API endpoints.
  */
-//@EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
-@EnableMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity(prePostEnabled = true) // @TODO: remove prePostEnabled
 public class SecurityConfig {
 
-    @Value("${auth0.audience}")
-    private String audience;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final JwtRequestFilter jwtRequestFilter;
 
-    @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
-    private String issuer;
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+
+        return authProvider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        /*
-        This is where we configure the security required for our endpoints and set up our app to serve as
-        an OAuth2 Resource Server, using JWT validation.
-        */
-        http.authorizeHttpRequests() // Write the requests in the decreasing order !
-                //@TODO: make all HttpMethods besides GET authenticated(), write a more flexible code! (by adding .anyRequest().authenticated() )
-                .requestMatchers(HttpMethod.GET, "/authors", "/books").permitAll()
-                .anyRequest().authenticated()
-//                .requestMatchers("/api/private-scoped").hasAuthority("SCOPE_read:messages")
-                .and()
+        http.csrf().disable()
                 .cors()
-//                .configurationSource(corsConfigurationSource())
                 .and()
-                .oauth2ResourceServer().jwt()
-                .decoder(jwtDecoder());
+                .authorizeHttpRequests()
+                .requestMatchers(HttpMethod.POST, "/auth/authenticate").permitAll()
+                .requestMatchers(HttpMethod.GET, "/authors/**", "/books/**").permitAll()
+                .requestMatchers("/swagger-ui/**").permitAll() // @FIXME: set access to admin only
+//                .requestMatchers(HttpMethod.POST, "/authors/**", "/books/**").permitAll() //@TODO: remove this line !!!!!!!
+//                .requestMatchers(HttpMethod.DELETE, "/authors/**", "/books/**").permitAll() //@TODO: remove this line !!!!!!!
+                .anyRequest().authenticated()
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authenticationProvider(authenticationProvider());
+
+        // .exceptionHandling((exceptions) -> exceptions
+        //  .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
+        //   .accessDeniedHandler(new BearerTokenAccessDeniedHandler())
+
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // makes sure that this filter (jwtRequestFilter) is called before UsernamePasswordAuthenticationFilter is called
+
         return http.build();
     }
 
-    private JwtDecoder jwtDecoder() {
-        /*
-        By default, Spring Security does not validate the "aud" claim of the token, to ensure that this token is
-        indeed intended for our app. Adding our own validator is easy to do:
-        */
-        NimbusJwtDecoder jwtDecoder = (NimbusJwtDecoder)
-                JwtDecoders.fromOidcIssuerLocation(issuer);
-
-        OAuth2TokenValidator<Jwt> audienceValidator = new AudienceValidator(audience);
-        OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(issuer);
-        OAuth2TokenValidator<Jwt> withAudience = new DelegatingOAuth2TokenValidator<>(withIssuer, audienceValidator);
-
-        jwtDecoder.setJwtValidator(withAudience);
-
-        return jwtDecoder;
+    //    //@TODO: set in the right place PasswordEncoder
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return NoOpPasswordEncoder.getInstance();
     }
+
 }
