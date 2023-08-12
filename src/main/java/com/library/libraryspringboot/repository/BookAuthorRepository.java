@@ -1,6 +1,6 @@
 package com.library.libraryspringboot.repository;
 
-import com.library.libraryspringboot.Tool.BookAuthorId;
+import com.library.libraryspringboot.tool.BookAuthorId;
 import com.library.libraryspringboot.entity.Book;
 import com.library.libraryspringboot.entity.BookAuthor;
 import org.springframework.data.domain.Page;
@@ -23,6 +23,7 @@ public interface BookAuthorRepository extends JpaRepository<BookAuthor, BookAuth
     @Modifying //The @Modifying annotation is used to enhance the @Query annotation so that we can execute not only SELECT queries, but also INSERT, UPDATE, DELETE, and even DDL queries
     @Query("DELETE FROM BookAuthor ba WHERE ba.bookAuthorId.bookId = ?1")
     void deleteBookAuthorByBookId(Book id);
-
     boolean existsBookAuthorByBookAuthorId(BookAuthorId bookAuthorId);
+    @Query("SELECT ba FROM BookAuthor ba JOIN FETCH ba.bookAuthorId.authorId a WHERE ba.bookAuthorId.bookId = ?1")
+    List<BookAuthor> findAllBookAuthorByBookId(Book id);
 }
