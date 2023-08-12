@@ -1,4 +1,4 @@
-package dto;
+package com.library.libraryspringboot.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
