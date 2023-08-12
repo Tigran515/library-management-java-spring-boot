@@ -1,4 +1,4 @@
-package com.library.libraryspringboot.Tool;
+package com.library.libraryspringboot.tool;
 
 import com.library.libraryspringboot.entity.Author;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -28,7 +28,7 @@ import java.util.List;
 //    }
 //
 //}
-public class AuthorSpecification implements Specification<Author> {
+public class AuthorSpecification implements Specification<Author> { //@TODO: delete the class if no usage
     private final String name;
     private final String lname;
     private final String sname;
