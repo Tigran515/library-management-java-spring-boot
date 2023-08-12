@@ -1,6 +1,6 @@
 package com.library.libraryspringboot.service;
 
-import dto.AuthorDTO;
+import com.library.libraryspringboot.dto.AuthorDTO;
 import org.springframework.data.domain.Page;
 import java.util.Optional;
 
