@@ -1,22 +1,22 @@
-package com.library.libraryspringboot.Tool;
+package com.library.libraryspringboot.tool;
 
 import com.library.libraryspringboot.entity.Author;
-import dto.AuthorDTO;
+import com.library.libraryspringboot.dto.AuthorDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
+
 @Component
-public class AuthorConverter {  // shouldn't it implement Serializable ?
+public class AuthorConverter implements Serializable {
 
     public AuthorDTO fromEntityToDto(Author author) {
         ModelMapper modelMapper = new ModelMapper();
-        dto.AuthorDTO authorDTO = modelMapper.map(author, dto.AuthorDTO.class);
-        return authorDTO;
+        return modelMapper.map(author, AuthorDTO.class);
     }
 
     public Author fromDtoToEntity(AuthorDTO authorDTO){
         ModelMapper modelMapper = new ModelMapper();
-        Author author = modelMapper.map(authorDTO, Author.class);
-        return author;
+        return modelMapper.map(authorDTO, Author.class);
     }
 }
