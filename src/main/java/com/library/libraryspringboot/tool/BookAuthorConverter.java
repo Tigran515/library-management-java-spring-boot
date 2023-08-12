@@ -1,17 +1,14 @@
-package com.library.libraryspringboot.Tool;
+package com.library.libraryspringboot.tool;
 
-import com.library.libraryspringboot.entity.Author;
-import com.library.libraryspringboot.entity.Book;
 import com.library.libraryspringboot.entity.BookAuthor;
-import dto.AuthorDTO;
-import dto.BookAuthorDTO;
-import dto.BookDTO;
+import com.library.libraryspringboot.dto.AuthorDTO;
+import com.library.libraryspringboot.dto.BookAuthorDTO;
+import com.library.libraryspringboot.dto.BookDTO;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BookAuthorConverter {
+public class BookAuthorConverter {  //@TODO: Remove unnecessary fields !
     private final ModelMapper modelMapper;
     private BookConverter bookConverter;
     private AuthorConverter authorConverter;
