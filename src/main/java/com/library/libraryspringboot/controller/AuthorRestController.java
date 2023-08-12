@@ -1,6 +1,7 @@
 package com.library.libraryspringboot.controller;
 
-import dto.AuthorDTO;
+import com.library.libraryspringboot.dto.AuthorDTO;
+import com.library.libraryspringboot.tool.AuthorSpecification;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -21,11 +22,11 @@ import java.util.Optional;
 public class AuthorRestController {
     private final AuthorService authorService;
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthorRestController.class);
-    private HttpServletRequest httpServletRequest;
+    private final HttpServletRequest HTTP_SERVLET_REQUEST;
 
-    public AuthorRestController(AuthorService authorService, HttpServletRequest httpServletRequest) {
+    public AuthorRestController(AuthorService authorService, HttpServletRequest HTTP_SERVLET_REQUEST) {
         this.authorService = authorService;
-        this.httpServletRequest = httpServletRequest;
+        this.HTTP_SERVLET_REQUEST = HTTP_SERVLET_REQUEST;
     }
 
     @Operation(summary = "Get authors", description = "Get a list of authors (paginated)")
@@ -38,7 +39,7 @@ public class AuthorRestController {
             @RequestParam(defaultValue = "0") final Integer offset,
             @RequestParam(defaultValue = "200") final Integer limit
     ) {
-        LOGGER.info("Incoming HTTP GET request to [URL={}]", httpServletRequest.getRequestURL().toString());
+        LOGGER.info("Incoming HTTP GET request to [URL={}]", HTTP_SERVLET_REQUEST.getRequestURL().toString());
         return authorService.getAuthors(offset, limit);
     }
 
@@ -49,7 +50,7 @@ public class AuthorRestController {
 
     @GetMapping("/author/{id}")
     Optional<AuthorDTO> getAuthorById(@PathVariable @Valid @Positive(message = "author id should be positive") Integer id) { //@TODO: make validation work here!
-        LOGGER.info("Incoming HTTP GET request to [URL={}]", httpServletRequest.getRequestURL().toString());
+        LOGGER.info("Incoming HTTP GET request to [URL={}]", HTTP_SERVLET_REQUEST.getRequestURL().toString());
         return authorService.getAuthorById(id);
     }
 
@@ -60,7 +61,7 @@ public class AuthorRestController {
 
     @PostMapping("/post")
     AuthorDTO post(@RequestBody @Valid AuthorDTO authorDTO) { // In Spring Boot, by default, unknown properties in JSON requests are simply ignored, and no exception is thrown.
-        LOGGER.info("Incoming HTTP POST request to [URL={}]", httpServletRequest.getRequestURL().toString());
+        LOGGER.info("Incoming HTTP POST request to [URL={}]", HTTP_SERVLET_REQUEST.getRequestURL().toString());
         return authorService.addAuthor(authorDTO);
     }
 
@@ -69,8 +70,8 @@ public class AuthorRestController {
             @ApiResponse(responseCode = "200", description = "author data has been updated")
     })
     @PatchMapping("/update/{id}")
-    AuthorDTO patch(@PathVariable Integer id, @RequestBody AuthorDTO updatedAuthorDTO) {
-        LOGGER.info("Incoming HTTP PATCH request to [URL={}]", httpServletRequest.getRequestURL().toString());
+    AuthorDTO patch(@PathVariable Integer id, @RequestBody AuthorDTO updatedAuthorDTO) { //@TODO: rename to actual functionality name
+        LOGGER.info("Incoming HTTP PATCH request to [URL={}]", HTTP_SERVLET_REQUEST.getRequestURL().toString());
         return authorService.updateAuthorFields(updatedAuthorDTO, id);
     }
 
@@ -81,7 +82,8 @@ public class AuthorRestController {
 
     @DeleteMapping("/delete/{id}")
     void deleteById(@PathVariable Integer id) { ///@TODO add validation here
-        LOGGER.info("Incoming HTTP DELETE request to [URL={}]", httpServletRequest.getRequestURL().toString());
+        LOGGER.info("Incoming HTTP DELETE request to [URL={}]", HTTP_SERVLET_REQUEST.getRequestURL().toString());
         authorService.deleteAuthorById(id);
     }
+
 }
