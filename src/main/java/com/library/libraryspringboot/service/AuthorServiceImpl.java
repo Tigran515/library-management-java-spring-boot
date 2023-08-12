@@ -1,9 +1,9 @@
 package com.library.libraryspringboot.service;
 
-import com.library.libraryspringboot.Tool.AuthorConverter;
+import com.library.libraryspringboot.tool.AuthorConverter;
 import com.library.libraryspringboot.entity.Author;
 import com.library.libraryspringboot.repository.AuthorRepository;
-import dto.AuthorDTO;
+import com.library.libraryspringboot.dto.AuthorDTO;
 import jakarta.validation.*;
 import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
