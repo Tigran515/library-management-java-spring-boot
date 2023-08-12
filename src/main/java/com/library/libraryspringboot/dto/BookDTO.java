@@ -1,8 +1,10 @@
-package dto;
+package com.library.libraryspringboot.dto;
 
 import com.library.libraryspringboot.entity.Book;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +20,7 @@ public class BookDTO {
     @NotBlank(message = "year is required")
     private Integer published;
     @NotBlank(message = "ISBN is required")
+    @Size(min = 13,max = 13)
     private String ISBN;  // change to char?
 
     public BookDTO(Book book) {
