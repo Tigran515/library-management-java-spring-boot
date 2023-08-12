@@ -2,11 +2,15 @@ package com.library.libraryspringboot.controller.exceptions;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.nio.file.AccessDeniedException;
 import java.util.Date;
 import java.util.NoSuchElementException;
 
@@ -45,4 +49,15 @@ public class ApiExceptionHandler {
                 "Data already exists"
         );
     }
+
+    @ExceptionHandler(value = AccessDeniedException.class)
+    @ResponseStatus(value = HttpStatus.FORBIDDEN)
+    public ErrorMessage accessDeniedException(HttpServletRequest request, AccessDeniedException ex){
+        return new ErrorMessage(HttpStatus.FORBIDDEN.value(),
+                new Date(),
+                ex.getMessage(),
+                "Access Denied"
+                );
+    }
+
 }
