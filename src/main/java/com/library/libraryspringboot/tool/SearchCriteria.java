@@ -1,4 +1,4 @@
-package com.library.libraryspringboot.Tool;
+package com.library.libraryspringboot.tool;
 
 public class SearchCriteria {
     private String authorName;
