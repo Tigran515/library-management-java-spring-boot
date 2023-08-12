@@ -1,15 +1,17 @@
-package com.library.libraryspringboot.Tool;
+package com.library.libraryspringboot.tool;
 
-import dto.BookDTO;
+import com.library.libraryspringboot.dto.BookDTO;
 import jakarta.validation.constraints.NotNull;
+
+import java.util.List;
 
 public class BookAuthorRequest { //@TODO: are this type of validation annotations useful here?
     @NotNull(message = "In request the book is empty")
     private BookDTO bookDTO;
     @NotNull
-    private Integer authorId;
+    private List<Integer> authorId;
 
-    public BookAuthorRequest(BookDTO bookDTO, Integer authorId) {
+    public BookAuthorRequest(@NotNull(message = "In request the book is empty") BookDTO bookDTO, @NotNull List<Integer> authorId) {
         this.bookDTO = bookDTO;
         this.authorId = authorId;
     }
@@ -18,8 +20,7 @@ public class BookAuthorRequest { //@TODO: are this type of validation annotation
         return bookDTO;
     }
 
-    public Integer getAuthorId() {
+    public List<Integer> getAuthorId() {
         return authorId;
     }
-
 }
