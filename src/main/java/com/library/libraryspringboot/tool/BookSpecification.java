@@ -1,4 +1,4 @@
-package com.library.libraryspringboot.Tool;
+package com.library.libraryspringboot.tool;
 
 import com.library.libraryspringboot.entity.Book;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -10,7 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookSpecification implements Specification<Book> {
+public class BookSpecification implements Specification<Book> {   //@TODO: delete the class if no usage
     private final String title;
     private final String isbn;
 
