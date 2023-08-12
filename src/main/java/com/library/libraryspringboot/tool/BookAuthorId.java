@@ -1,8 +1,7 @@
-package com.library.libraryspringboot.Tool;
+package com.library.libraryspringboot.tool;
 
 import com.library.libraryspringboot.entity.Author;
 import com.library.libraryspringboot.entity.Book;
-import dto.BookDTO;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
