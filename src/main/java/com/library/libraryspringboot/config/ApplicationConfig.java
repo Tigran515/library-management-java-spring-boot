@@ -13,13 +13,17 @@ import lombok.RequiredArgsConstructor;
 public class ApplicationConfig implements WebMvcConfigurer {
     @Value("${client.port}")
     private String clientPort;
+    @Value("${JWT_TOKEN_HEADER}")
+    private String JwtHeader;
 
     @Override
     public void addCorsMappings(final CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins(clientPort)
+                .allowedMethods(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.PATCH.name(), HttpMethod.DELETE.name(), HttpMethod.HEAD.name())
                 .allowedHeaders(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE)
-                .allowedMethods(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.PATCH.name(), HttpMethod.DELETE.name())
+                .exposedHeaders(JwtHeader)
+                .allowCredentials(true)
                 .maxAge(86400);
     }
 }
