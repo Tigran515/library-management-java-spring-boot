@@ -1,12 +1,12 @@
 package com.library.libraryspringboot.service;
 
-import com.library.libraryspringboot.Tool.*;
+import com.library.libraryspringboot.tool.*;
 import com.library.libraryspringboot.entity.Author;
 import com.library.libraryspringboot.entity.Book;
 import com.library.libraryspringboot.entity.BookAuthor;
 import com.library.libraryspringboot.repository.BookAuthorRepository;
 import com.library.libraryspringboot.repository.BookRepository;
-import dto.BookAuthorDTO;
+import com.library.libraryspringboot.dto.BookAuthorDTO;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

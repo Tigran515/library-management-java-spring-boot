@@ -1,8 +1,8 @@
 package com.library.libraryspringboot.controller;
 
-import com.library.libraryspringboot.Tool.SearchCriteria;
+import com.library.libraryspringboot.tool.SearchCriteria;
 import com.library.libraryspringboot.service.BookAuthorService;
-import dto.BookAuthorDTO;
+import com.library.libraryspringboot.dto.BookAuthorDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.*;
 public class BookAuthorRestController {
     private final BookAuthorService bookAuthorService;
     private static final Logger LOGGER = LoggerFactory.getLogger(BookAuthorRestController.class);
-    private HttpServletRequest httpServletRequest;
+    private final HttpServletRequest HTTP_SERVLET_REQUEST;
 
-    public BookAuthorRestController(BookAuthorService bookAuthorService, HttpServletRequest httpServletRequest) {
+    public BookAuthorRestController(BookAuthorService bookAuthorService, HttpServletRequest HTTP_SERVLET_REQUEST) {
         this.bookAuthorService = bookAuthorService;
-        this.httpServletRequest = httpServletRequest;
+        this.HTTP_SERVLET_REQUEST = HTTP_SERVLET_REQUEST;
 
     }
 
@@ -27,7 +27,7 @@ public class BookAuthorRestController {
     Page<BookAuthorDTO> getAll(
             @RequestParam(defaultValue = "0") final Integer offset,
             @RequestParam(defaultValue = "200") final Integer limit) {
-        LOGGER.info("Incoming HTTP GET request to [URL={}]", httpServletRequest.getRequestURL().toString());
+        LOGGER.info("Incoming HTTP GET request to [URL={}]", HTTP_SERVLET_REQUEST.getRequestURL().toString());
         
         return bookAuthorService.getBooksAndAuthors(offset, limit);
     }

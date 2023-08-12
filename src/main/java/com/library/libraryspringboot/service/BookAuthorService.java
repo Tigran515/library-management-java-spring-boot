@@ -1,9 +1,9 @@
 package com.library.libraryspringboot.service;
 
-import com.library.libraryspringboot.Tool.SearchCriteria;
+import com.library.libraryspringboot.tool.SearchCriteria;
 import com.library.libraryspringboot.entity.Author;
 import com.library.libraryspringboot.entity.Book;
-import dto.BookAuthorDTO;
+import com.library.libraryspringboot.dto.BookAuthorDTO;
 import org.springframework.data.domain.Page;
 
 
