@@ -1,21 +1,22 @@
 package com.library.libraryspringboot.controller;
 
 import com.library.libraryspringboot.dto.AuthorDTO;
-import com.library.libraryspringboot.tool.AuthorSpecification;
+import com.library.libraryspringboot.dto.validation.PostValidation;
+import com.library.libraryspringboot.dto.validation.PutValidation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.slf4j.Logger;
 import com.library.libraryspringboot.service.AuthorService;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/authors")
@@ -33,7 +34,6 @@ public class AuthorRestController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found the authors")
     })
-
     @GetMapping
     public Page<AuthorDTO> getAuthors(
             @RequestParam(defaultValue = "0") final Integer offset,
@@ -47,9 +47,8 @@ public class AuthorRestController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "found the author by ID")
     })
-
     @GetMapping("/author/{id}")
-    Optional<AuthorDTO> getAuthorById(@PathVariable @Valid @Positive(message = "author id should be positive") Integer id) { //@TODO: make validation work here!
+    AuthorDTO getAuthorById(@PathVariable @NotNull @Positive(message = "author ID should be positive number") Integer id) {
         LOGGER.info("Incoming HTTP GET request to [URL={}]", HTTP_SERVLET_REQUEST.getRequestURL().toString());
         return authorService.getAuthorById(id);
     }
@@ -58,9 +57,8 @@ public class AuthorRestController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "new author data has been added")
     })
-
     @PostMapping("/post")
-    AuthorDTO post(@RequestBody @Valid AuthorDTO authorDTO) { // In Spring Boot, by default, unknown properties in JSON requests are simply ignored, and no exception is thrown.
+    AuthorDTO post(@RequestBody @Validated(PostValidation.class) AuthorDTO authorDTO) { // In Spring Boot, by default, unknown properties in JSON requests are simply ignored, and no exception is thrown.
         LOGGER.info("Incoming HTTP POST request to [URL={}]", HTTP_SERVLET_REQUEST.getRequestURL().toString());
         return authorService.addAuthor(authorDTO);
     }
@@ -69,19 +67,18 @@ public class AuthorRestController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "author data has been updated")
     })
-    @PatchMapping("/update/{id}")
-    AuthorDTO patch(@PathVariable Integer id, @RequestBody AuthorDTO updatedAuthorDTO) { //@TODO: rename to actual functionality name
+    @PutMapping("/update")
+    AuthorDTO put(@RequestBody @Validated(PutValidation.class) AuthorDTO updatedAuthorDTO) {
         LOGGER.info("Incoming HTTP PATCH request to [URL={}]", HTTP_SERVLET_REQUEST.getRequestURL().toString());
-        return authorService.updateAuthorFields(updatedAuthorDTO, id);
+        return authorService.updateAuthorById(updatedAuthorDTO);
     }
 
     @Operation(summary = "Delete an author", description = "Delete an author by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "author deleted")
     })
-
     @DeleteMapping("/delete/{id}")
-    void deleteById(@PathVariable Integer id) { ///@TODO add validation here
+    void deleteById(@PathVariable @NotNull Integer id) {
         LOGGER.info("Incoming HTTP DELETE request to [URL={}]", HTTP_SERVLET_REQUEST.getRequestURL().toString());
         authorService.deleteAuthorById(id);
     }

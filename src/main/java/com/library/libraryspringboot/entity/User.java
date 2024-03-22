@@ -8,41 +8,26 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "user")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @Column(length = 320, nullable = false)
     private String username;
-
-    @Column(length = 255, nullable = false)
     private String password;
-
-    @Column(length = 180, nullable = false)
     private String name;
-
-    @Column(length = 180, nullable = false)
     private String lname;
-
-    @Column(length = 180, nullable = false)
     private String sname;
-
     @Enumerated(EnumType.STRING)//by default Ordinal 01
-    @Column(length = 10, nullable = false, columnDefinition = "ENUM('admin', 'user') DEFAULT 'user'")
     private RoleEnum role;
-
-    @Column(name = "created_at",nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "created_at")
     private Timestamp created;
-
-    @Column(name = "last_login")
+    @Column(name = "last_connection")
     private Timestamp lastConnection; //change to lastConnection + column
-
-    @Column(length = 5, nullable = false)
     private Boolean active;
 
+    public User() {
+    }
 
-    public Integer id() {
+    public Integer getId() {
         return id;
     }
 
@@ -98,8 +83,16 @@ public class User {
         return created;
     }
 
+    public void setCreated(Timestamp created) {
+        this.created = created;
+    }
+
     public Timestamp getLastConnection() {
         return lastConnection;
+    }
+
+    public void setLastConnection(Timestamp lastConnection) {
+        this.lastConnection = lastConnection;
     }
 
     public Boolean isActive() {
@@ -109,4 +102,5 @@ public class User {
     public void setActive(Boolean active) {
         this.active = active;
     }
+
 }

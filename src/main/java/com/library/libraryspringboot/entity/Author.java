@@ -17,10 +17,6 @@ public class Author {
 
     }
 
-    public Integer getId() {
-        return id;
-    }
-
     public Author(String name, String lname, String sname, Integer born) {
         this.name = name;
         this.lname = lname;
@@ -28,6 +24,9 @@ public class Author {
         this.born = born;
     }
 
+    public Integer getId() {
+        return id;
+    }
     public String getName() {
         return name;
     }

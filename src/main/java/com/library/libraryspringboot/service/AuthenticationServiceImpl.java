@@ -21,7 +21,6 @@ import java.util.NoSuchElementException;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
-
     private final AuthenticationManager authenticationManager;
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtUtil jwtTokenUtil;
@@ -51,20 +50,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             LOGGER.error("Incorrect username or password. User with [username=" + authenticationRequest.getUsername() + "] was not authenticated");
             throw new AccessDeniedException("Incorrect username or password");
         }
-        final UserDetails userDetails = userDetailsService
+        final UserDetails USER_DETAILS = userDetailsService
                 .loadUserByUsername(authenticationRequest.getUsername());
-        final String jwt = jwtTokenUtil.generateToken(userDetails); // unnecessary here
         // at the end create an authentication response instance and pass it back creating response
-        // entity out of it. This is standard REST API
+        // entity out of it.This is standard REST API.
 
-        HttpHeaders jwtHeader = getJwtHeader(userDetails);
+        HttpHeaders jwtHeader = getJwtHeader(USER_DETAILS);
         UserDTO loggedInUserDto = userConverter.fromEntityToDto(userRepository.findByUsername(authenticationRequest.getUsername()).orElseThrow(() -> new NoSuchElementException("User not found")));
         return new ResponseEntity<>(loggedInUserDto, jwtHeader, 200);
     }
 
     private HttpHeaders getJwtHeader(UserDetails userDetails) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add(JWT_TOKEN_HEADER, jwtTokenUtil.generateToken(userDetails)); //@TODO: handle JWT_TOKEN_HEADER in application.properties
+        headers.add(JWT_TOKEN_HEADER, jwtTokenUtil.generateToken(userDetails)); //@TODO:At the end change JWT_TOKEN_HEADER value in application.properties for safety
         return headers;
     }
 }

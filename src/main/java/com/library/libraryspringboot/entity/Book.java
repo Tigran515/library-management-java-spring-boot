@@ -1,6 +1,7 @@
 package com.library.libraryspringboot.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 
 @Entity
 @Table(name = "book")

@@ -14,4 +14,9 @@ public class UserConverter implements Serializable {
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(user, UserDTO.class);
     }
+
+    public User fromDtoToEntity(UserDTO userDTO) {
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(userDTO, User.class);
+    }
 }

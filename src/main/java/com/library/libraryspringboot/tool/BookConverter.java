@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.io.Serializable;
 
 @Component
-public class BookConverter implements Serializable {  // shouldn't it implement Serializable ?
+public class BookConverter implements Serializable {
 
     public BookDTO fromEntityToDto(Book book) {
         ModelMapper modelMapper = new ModelMapper();

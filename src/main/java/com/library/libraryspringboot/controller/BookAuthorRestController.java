@@ -28,11 +28,12 @@ public class BookAuthorRestController {
             @RequestParam(defaultValue = "0") final Integer offset,
             @RequestParam(defaultValue = "200") final Integer limit) {
         LOGGER.info("Incoming HTTP GET request to [URL={}]", HTTP_SERVLET_REQUEST.getRequestURL().toString());
-        
+
         return bookAuthorService.getBooksAndAuthors(offset, limit);
     }
 
-    @GetMapping("/search")
+    //    @GetMapping("/search")
+    @PostMapping("/search")
     <T> T getAdvancedSearch(@RequestBody SearchCriteria detail) {
 //        if (detail.isEmpty()) {
 //            throw new MethodInvalidArgumentException("search inputs are empty");

@@ -25,12 +25,13 @@ public class JwtUtil {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) { //next important
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) { //next important,
+        // pulls information from current Token
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    private Claims extractAllClaims(String token) {
+    private Claims extractAllClaims(String token) { // JWT tokens are decoded here
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
     }
 
@@ -39,16 +40,16 @@ public class JwtUtil {
     }
 
     public String generateToken(UserDetails userDetails) { //Most important method, creates JWT based on userDetails
-        Map<String, Object> claims = new HashMap<>(); //you can pass any other specific claims that you want to include in the payload
+        Map<String, Object> claims = new HashMap<>(); //Currently empty,but you can pass any other specific claims that you want to include in the payload
         return createToken(claims, userDetails.getUsername());
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 10)) // 10 sec= 1000 * 10
-//                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 10)) // 10 sec= 1000 * 10
+        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis())) //builder pattern is used here
+              .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 10)) // 10 sec= 1000 * 10
+//                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 10))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
-    }
+    }//NOTE:in .setSubject the subject is the person who is/has being authenticated/successfully authenticated in this case
 
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);

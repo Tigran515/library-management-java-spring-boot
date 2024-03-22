@@ -12,7 +12,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -22,7 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  */
 @Configuration
 @RequiredArgsConstructor
-@EnableMethodSecurity(prePostEnabled = true) // @TODO: remove prePostEnabled
+@EnableMethodSecurity(prePostEnabled = true) // @TODO: remove prePostEnabledcl
 public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
@@ -49,10 +49,11 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.POST, "/auth/authenticate").permitAll()
-                .requestMatchers(HttpMethod.GET, "/authors/**", "/books/**").permitAll()
-                .requestMatchers("/swagger-ui/**").permitAll() // @FIXME: set access to admin only
-//                .requestMatchers(HttpMethod.POST, "/authors/**", "/books/**").permitAll() //@TODO: remove this line !!!!!!!
-//                .requestMatchers(HttpMethod.DELETE, "/authors/**", "/books/**").permitAll() //@TODO: remove this line !!!!!!!
+                .requestMatchers(HttpMethod.GET, "/authors/**", "/books/**", "/users/**", "/bookAuthor/**").permitAll() //@TODO:DELETE this line
+                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll() // @FIXME:after testing set access to admin only .hasRole()
+                .requestMatchers(HttpMethod.PUT, "/users/**", "/authors/**", "/books/**", "/bookAuthor/**", "/users/**").permitAll()//@TODO:DELETE this line
+                .requestMatchers(HttpMethod.DELETE, "/users/**", "/authors/**", "/books/**").permitAll()  //@TODO:DELETE this line
+                .requestMatchers(HttpMethod.PATCH, "/users/**").permitAll()  //@TODO:DELETE this line
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -62,20 +63,14 @@ public class SecurityConfig {
         // .exceptionHandling((exceptions) -> exceptions
         //  .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
         //   .accessDeniedHandler(new BearerTokenAccessDeniedHandler())
-
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // makes sure that this filter (jwtRequestFilter) is called before UsernamePasswordAuthenticationFilter is called
 
         return http.build();
     }
 
-    //    //@TODO: set in the right place PasswordEncoder
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 
 }

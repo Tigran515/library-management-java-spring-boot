@@ -7,8 +7,10 @@ import com.library.libraryspringboot.dto.BookDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
+
 @Component
-public class BookAuthorConverter {  //@TODO: Remove unnecessary fields !
+public class BookAuthorConverter implements Serializable {  //@TODO: Remove unnecessary fields !
     private final ModelMapper modelMapper;
     private BookConverter bookConverter;
     private AuthorConverter authorConverter;

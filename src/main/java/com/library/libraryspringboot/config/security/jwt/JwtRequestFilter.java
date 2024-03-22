@@ -28,11 +28,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        final String authorizationHeader = request.getHeader("Authorization");
+        final String authorizationHeader = request.getHeader("Authorization");//@TODO move to .env
         String username = null;
         String jwt = null;
 
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {//@TODO move to .env
             jwt = authorizationHeader.substring(7);
             username = jwtUtil.extractUsername(jwt);
         }
@@ -40,13 +40,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) { //2nd we are verifying if that SecurityUserContext does not already have an authenticated user
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
-            if (jwtUtil.validateToken(jwt, userDetails)) { //this operations Spring Security would have automatically done, but we should do it if only one condition that jwt is valid and that's why we do it explicitly
+            if (jwtUtil.validateToken(jwt, userDetails)) { //this operation Spring Security would have automatically done, but we should do it if only one condition that jwt is valid and that's why we do it explicitly
 
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-                System.out.println("All GOOD");
             }
             // we need to continue the chain
         }

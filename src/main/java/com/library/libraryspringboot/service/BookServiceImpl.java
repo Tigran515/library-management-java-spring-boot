@@ -1,22 +1,26 @@
 package com.library.libraryspringboot.service;
 
+import com.library.libraryspringboot.dto.validation.PutValidation;
 import com.library.libraryspringboot.entity.BookAuthor;
 import com.library.libraryspringboot.tool.BookConverter;
-import com.library.libraryspringboot.entity.Author;
 import com.library.libraryspringboot.entity.Book;
-import com.library.libraryspringboot.repository.AuthorRepository;
 import com.library.libraryspringboot.repository.BookAuthorRepository;
 import com.library.libraryspringboot.repository.BookRepository;
 import com.library.libraryspringboot.dto.BookAuthorDTO;
 import com.library.libraryspringboot.dto.BookDTO;
+import com.library.libraryspringboot.tool.ValidationTool;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.groups.Default;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.MessageFormat;
 import java.util.*;
 
 @Service
@@ -24,16 +28,17 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final BookConverter bookConverter;
     private final BookAuthorService bookAuthorService;
-    private final AuthorRepository authorRepository;
     private final BookAuthorRepository bookAuthorRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(BookServiceImpl.class);
+    private final ValidationTool validationTool;
 
-    public BookServiceImpl(BookRepository bookRepository, BookConverter bookConverter, BookAuthorService bookAuthorService, AuthorRepository authorRepository, BookAuthorRepository bookAuthorRepository) {
+    public BookServiceImpl(BookRepository bookRepository, BookConverter bookConverter, BookAuthorService bookAuthorService,
+                           BookAuthorRepository bookAuthorRepository, ValidationTool validationTool) {
         this.bookRepository = bookRepository;
         this.bookConverter = bookConverter;
         this.bookAuthorService = bookAuthorService;
-        this.authorRepository = authorRepository;
         this.bookAuthorRepository = bookAuthorRepository;
+        this.validationTool = validationTool;
     }
 
     @Override
@@ -44,112 +49,104 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Optional<BookDTO> getBookById(Integer id) {
-        Optional<Book> book = Optional.ofNullable(bookRepository.findById(String.valueOf(id))
-                .orElseThrow(() -> {
+    public BookDTO getBookById(@NotNull Integer id) {
+        Book book = bookRepository.findById(String.valueOf(id))
+                .orElseThrow(() -> { // @TODO: in this case it's okay to throw an exception but //check findById exception type
                     String errorMsg = "Book with [ID=" + id + "] was not found";
                     LOGGER.error(errorMsg);
                     return new NoSuchElementException(errorMsg);
-                }));
+                });
         LOGGER.info("Book with [id=" + id + "] was found");
-        return book.stream().map(bookConverter::fromEntityToDto).findFirst();
+        return bookConverter.fromEntityToDto(book);
     }
 
-    //    @Override
-//    @Transactional
-//    public BookAuthorDTO addBook(BookDTO bookDTO, List<Integer> authorId) {
-//        Objects.requireNonNull(bookDTO, "BookDTO cannot be null"); // @TODO: remove if not useful
-//        Objects.requireNonNull(authorId, "Author ID cannot be null"); // @TODO: remove if not useful
-//
-//        if (bookRepository.existsBookByISBN(bookDTO.getISBN())) {
-//            String errorMsg = "Book with [ISBN=" + bookDTO.getISBN()+ "] that you are trying to add already exists.";//for the future authorId will be replaced with author
-//            LOGGER.error(errorMsg);
-//            throw new DuplicateKeyException(errorMsg);
-//        }
-//        Book book = bookConverter.fromDtoToEntity(bookDTO);
-//        bookRepository.save(book);
-//        Author author = authorRepository.findById(authorId.toString())
-//                .orElseThrow(() -> {
-//                    String errorMsg = "Author with [ID=" + authorId + "] not found";
-//                    LOGGER.error(errorMsg);
-//                    return new NoSuchElementException(errorMsg);
-//                });
-//        BookAuthorDTO bookAuthorDTO = bookAuthorService.addBookAuthor(book, author);
-//        LOGGER.info("Book with [id=" + book.getId() + "] was added");
-//
-//        return bookAuthorDTO;
-//    }
     @Override
-    @Transactional
-    public List<BookAuthorDTO> addBook(BookDTO bookDTO, List<Integer> authorId) {
-        Objects.requireNonNull(bookDTO, "BookDTO cannot be null"); // @TODO: remove if not useful
-        Objects.requireNonNull(authorId, "Author ID cannot be null"); // @TODO: remove if not useful
+    @Transactional //@TODO:🔥 Angular!! also make changes in the Client code
+    public List<BookAuthorDTO> addBook(BookDTO bookDTO) {
+//        if (bookDTO == null) { if the author id is empty anyway an ILLEGAL ARG is thrwon
+//            String errorMsg = "Cannot add Book because it is null.";
+//            LOGGER.error(errorMsg);
+//            throw new IllegalArgumentException(errorMsg);
+//        }
+        validationTool.validateByGroup(bookDTO, Default.class);
 
+        if (bookDTO.getAuthorId().isEmpty()) {
+            String errorMsg = "Author ID list is empty.";
+            LOGGER.error(errorMsg);
+            throw new IllegalArgumentException(errorMsg);
+        }
         if (bookRepository.existsBookByISBN(bookDTO.getISBN())) {
-            String errorMsg = "Book with [ISBN=" + bookDTO.getISBN() + "] that you are trying to add already exists.";//for the future authorId will be replaced with author
+            String errorMsg = "Book with [ISBN=" + bookDTO.getISBN() + "] already exists.";
             LOGGER.error(errorMsg);
             throw new DuplicateKeyException(errorMsg);
         }
+
         Book book = bookConverter.fromDtoToEntity(bookDTO);
         bookRepository.save(book);
-        BookAuthorDTO bookAuthorDTO = null;
-        List<BookAuthorDTO> bookAuthorDTOList = new ArrayList<>();
+        bookDTO.setId(String.valueOf(book.getId()));
+        List<BookAuthorDTO> bookAuthorDTO = bookAuthorService.addBookAuthor(bookDTO);
+        LOGGER.info("Book with [id=" + book.getId() + "] was added");
 
-        for (Integer id : authorId) {
-            System.out.println("authors " + id);
-
-            Author author = authorRepository.findById(id.toString())
-                    .orElseThrow(() -> {
-                        String errorMsg = "Author with [ID=" + id + "] not found";
-                        LOGGER.error(errorMsg);
-                        return new NoSuchElementException(errorMsg);
-                    });
-            bookAuthorDTO = bookAuthorService.addBookAuthor(book, author);
-            LOGGER.info("Book with [id=" + book.getId() + "] was added");
-            bookAuthorDTOList.add(bookAuthorDTO);
-        }
-
-        return bookAuthorDTOList;
+        return bookAuthorDTO;
     }
-
-//    @Override
-//    @Transactional
-//    public void deleteBookById(Integer id) { //@TODO: IMPORTANT! 1.refactor the code to  RESTful API convention by not returning any value 2.add argument validation
-//        Book book = bookRepository.findById(String.valueOf(id))
-//                .orElseThrow(() ->
-//                {
-//                    String errorMsg = "Book with [ID=" + id + "] does not exists";
-//                    LOGGER.error(errorMsg);
-//                    return new NoSuchElementException(errorMsg);
-//                });
-//        bookAuthorRepository.findBookAuthorByBookId(book) //the BUG is here, do it for each
-//                .orElseThrow(() ->
-//                {
-//                    String errorMsg = "Book with [ID= " + id + "] was not found";
-//                    LOGGER.error(errorMsg);
-//                    return new NoSuchElementException(errorMsg);
-//                });
-//
-//        bookRepository.deleteById(String.valueOf(id));
-//        bookAuthorRepository.deleteBookAuthorByBookId(book);
-//        LOGGER.info("Book with [ID=" + id + "] was removed");
-//    }
 
     @Override
     @Transactional
-    public void deleteBookById(Integer id) { //@TODO: IMPORTANT! 1.refactor the code to  RESTful API convention by not returning any value 2.add argument validation
+    @SuppressWarnings("ConstantConditions")
+    public List<BookAuthorDTO> updateBookById(BookDTO bookDTO) {
+        if (bookDTO.getId() == null) { // Despite the warning, the null check is required.//The Service layer trusts only itself in case of validation.// Anyway,the validation tool validates the id.
+            String errorMsg = "Book with [id=null] not found";
+            LOGGER.error(errorMsg);
+            throw new IllegalArgumentException(errorMsg);
+        }
+        validationTool.validateByGroup(bookDTO, PutValidation.class);
+        Book existingBook = bookRepository.findById(bookDTO.getId())
+                .orElseThrow(() -> {
+                    String errorMsg = "Book with [ID=" + bookDTO.getId() + "] not found";
+                    LOGGER.error(errorMsg);
+                    return new NoSuchElementException(errorMsg);
+                });
+        BeanUtils.copyProperties(bookDTO, existingBook);
+        bookRepository.save(existingBook);
+        LOGGER.info(MessageFormat.format("Book with [id={0}] was updated", existingBook.getId()));
+
+        List<Integer> existingAuthorIds = bookAuthorRepository.findAuthorIdByBookId(existingBook);
+        if (existingAuthorIds == null) {
+            LOGGER.warn("Book with [id=" + bookDTO.getId() + "] not found");
+        } else {
+            List<Integer> authorsToDelete = existingAuthorIds.stream()
+                    .filter(id -> !bookDTO.getAuthorId().contains(id)).toList();
+            List<Integer> authorsToAdd = bookDTO.getAuthorId().stream()
+                    .filter(id -> !existingAuthorIds.contains(id)).toList();
+
+            if (!authorsToDelete.isEmpty()) {
+                BookDTO updateBookDTO = new BookDTO(existingBook, authorsToDelete);
+                bookAuthorService.deleteBookAuthorById(updateBookDTO);
+//                    LOGGER.info("Book with [id=" + existingBook.getId() + "] and Author with [id=" + author.getId() + "] was deleted from BookAuthor"); //@FIXME: another service already has LOGGER.info
+            }
+            if (!authorsToAdd.isEmpty()) {
+                BookDTO updatedBookDTO = new BookDTO(existingBook, authorsToAdd);
+                bookAuthorService.addBookAuthor(updatedBookDTO);
+//                LOGGER.info("Book with [id=" + existingBook.getId() + "] and Author with [id=" + author.getId() + "] was added to BookAuthor"); //@FIXME: another service already has LOGGER.info
+            }
+        }
+        return bookAuthorService.getBookAuthorById(existingBook);
+    }
+
+
+    @Override
+    @Transactional
+    public void deleteBookById(@NotNull Integer id) { //@TODO:IMPORTANT!// 1.refactor the code to  RESTful API convention by not returning any value
         Optional<Book> book = bookRepository.findById(String.valueOf(id));
         if (book.isEmpty()) {
             LOGGER.error("Book with [ID=" + id + "] does not exists");
             return;
         }
-
         List<BookAuthor> bookAuthorList = bookAuthorRepository.findAllBookAuthorByBookId(book.get());
         if (bookAuthorList.isEmpty()) {
             LOGGER.error("Book with [ID= " + id + "] was not found");
-            return;
+//            return;
         }
-        System.out.println("BOOKsAuthors " + bookAuthorList);
         bookRepository.deleteById(String.valueOf(id));
         bookAuthorRepository.deleteBookAuthorByBookId(book.get());
         LOGGER.info("Book with [ID=" + id + "] was removed");

@@ -14,21 +14,15 @@ import java.nio.file.AccessDeniedException;
 
 @RestController
 @RequestMapping(value = "/auth")  //@TODO: rename
-public class AuthenticationController {
+public class AuthenticationController { //@TODO: rename to RestController
 
     private final AuthenticationServiceImpl authenticationService;
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationController.class);
     private final HttpServletRequest HTTP_SERVLET_REQUEST;
-    private final UserRepository userRepository;
-    private final AuthorRepository authorRepository;
 
-    public AuthenticationController(AuthenticationServiceImpl authenticationService, HttpServletRequest HTTP_SERVLET_REQUEST,
-                                    UserRepository userRepository,
-                                    AuthorRepository authorRepository) {
+    public AuthenticationController(AuthenticationServiceImpl authenticationService, HttpServletRequest HTTP_SERVLET_REQUEST) {
         this.authenticationService = authenticationService;
         this.HTTP_SERVLET_REQUEST = HTTP_SERVLET_REQUEST;
-        this.userRepository = userRepository;
-        this.authorRepository = authorRepository;
     }
 
     @PostMapping("/authenticate")

@@ -2,13 +2,14 @@ package com.library.libraryspringboot.controller.exceptions;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.http.HttpMethod;
+//import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.web.access.AccessDeniedHandler;
+//import org.springframework.security.authentication.BadCredentialsException;
+//import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.nio.file.AccessDeniedException;
 import java.util.Date;
