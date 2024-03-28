@@ -1,5 +1,8 @@
 package com.library.libraryspringboot.tool;
 
+import lombok.Data;
+
+@Data
 public class SearchCriteria {
     private String authorName;
     private String authorLname;
@@ -8,27 +11,18 @@ public class SearchCriteria {
     private String isbn;
     private String detail;
 
-    public String getAuthorName() {
-        return authorName;
+    public SearchCriteria() {
     }
 
-    public String getAuthorLname() {
-        return authorLname;
+    public SearchCriteria(String authorName, String authorLname, String authorSname, String bookTitle, String isbn) {
+        this.authorName = authorName;
+        this.authorLname = authorLname;
+        this.authorSname = authorSname;
+        this.bookTitle = bookTitle;
+        this.isbn = isbn;
     }
 
-    public String getAuthorSname() {
-        return authorSname;
-    }
-
-    public String getBookTitle() {
-        return bookTitle;
-    }
-
-    public String getISBN() {
-        return isbn;
-    }
-
-    public String getDetail() {
-        return detail;
+    public SearchCriteria(String detail) {
+        this.detail = detail;
     }
 }

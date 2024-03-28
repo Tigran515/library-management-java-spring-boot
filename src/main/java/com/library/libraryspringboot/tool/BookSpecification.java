@@ -21,7 +21,7 @@ public class BookSpecification implements Specification<Book> {   //@TODO: delet
 
     public BookSpecification(SearchCriteria detail) {
         this.title = detail.getBookTitle();
-        this.isbn = detail.getISBN();
+        this.isbn = detail.getIsbn();
     }
 
     @Override

@@ -70,10 +70,10 @@ public class BookAuthorServiceImpl implements BookAuthorService {
     //1. change return type to <?> Wildcard
     public <T> T findBooksAndAuthorsByCriteria(SearchCriteria detail) {// @TODO 2.add Validation for detail & handel the warnings ,if needed remove the exceptions
 
-        if (detail.getISBN() != null) { // @TODO: check if changes in BookAuthorRepository didn't effect on this method!!
-            Book book = bookRepository.findBookByISBN(detail.getISBN()).orElseThrow(() -> new NoSuchElementException("Failed to find book. No book with this ISBN exists"));
+        if (detail.getIsbn() != null) { // @TODO: check if changes in BookAuthorRepository didn't effect on this method!!
+            Book book = bookRepository.findBookByISBN(detail.getIsbn()).orElseThrow(() -> new NoSuchElementException("Failed to find book. No book with this ISBN exists"));
             BookAuthor bookAuthor = bookAuthorRepository.findBookAuthorByBookId(book).orElseThrow(() -> new NoSuchElementException("Failed to find book and author."));
-            LOGGER.info("Search result of book with [ISBN=" + detail.getISBN() + "] was found");
+            LOGGER.info("Search result of book with [ISBN=" + detail.getIsbn() + "] was found");
 
             return (T) bookAuthorConverter.fromEntityToDto(bookAuthor);
         }
