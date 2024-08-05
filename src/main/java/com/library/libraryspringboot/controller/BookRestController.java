@@ -1,7 +1,6 @@
 package com.library.libraryspringboot.controller;
 
 import com.library.libraryspringboot.dto.validation.PutValidation;
-import com.library.libraryspringboot.repository.BookAuthorRepository;
 import com.library.libraryspringboot.service.BookService;
 import com.library.libraryspringboot.dto.BookAuthorDTO;
 import com.library.libraryspringboot.dto.BookDTO;
@@ -25,13 +24,10 @@ public class BookRestController {
     private final BookService bookService;
     private static final Logger LOGGER = LoggerFactory.getLogger(BookRestController.class);
     private final HttpServletRequest HTTP_SERVLET_REQUEST;
-    private final BookAuthorRepository bookAuthorRepository;
 
-    public BookRestController(BookService bookService, HttpServletRequest HTTP_SERVLET_REQUEST,
-                              BookAuthorRepository bookAuthorRepository) {
+    public BookRestController(BookService bookService, HttpServletRequest HTTP_SERVLET_REQUEST) {
         this.bookService = bookService;
         this.HTTP_SERVLET_REQUEST = HTTP_SERVLET_REQUEST;
-        this.bookAuthorRepository = bookAuthorRepository;
     }
 
     @Operation(summary = "Get books", description = "Get a list of books (paginated)")
