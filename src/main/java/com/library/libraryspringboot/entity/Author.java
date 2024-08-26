@@ -1,8 +1,6 @@
 package com.library.libraryspringboot.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "author")
@@ -19,10 +17,6 @@ public class Author {
 
     }
 
-    public Integer getId() {
-        return id;
-    }
-
     public Author(String name, String lname, String sname, Integer born) {
         this.name = name;
         this.lname = lname;
@@ -30,6 +24,9 @@ public class Author {
         this.born = born;
     }
 
+    public Integer getId() {
+        return id;
+    }
     public String getName() {
         return name;
     }

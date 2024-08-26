@@ -1,4 +1,4 @@
-package com.library.libraryspringboot.Tool;
+package com.library.libraryspringboot.tool;
 
 import com.library.libraryspringboot.entity.Author;
 import com.library.libraryspringboot.entity.Book;
@@ -8,12 +8,11 @@ import java.io.Serializable;
 
 @Embeddable
 public class BookAuthorId implements Serializable {
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
     private Book bookId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
     private Author authorId;
 

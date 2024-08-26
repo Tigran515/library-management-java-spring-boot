@@ -1,8 +1,7 @@
 package com.library.libraryspringboot.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import org.springframework.data.relational.core.sql.In;
+import lombok.AllArgsConstructor;
 
 @Entity
 @Table(name = "book")
@@ -12,7 +11,7 @@ public class Book {
     private Integer id;
     private String title;
     private Integer published;
-    private String ISBN;  //@TODO: change to char?
+    private String ISBN;
 
     public Book() {
 
@@ -50,5 +49,10 @@ public class Book {
 
     public void setISBN(String ISBN) {
         this.ISBN = ISBN;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[title=%s,published=%s,ISBN=%s]", title, published, ISBN);
     }
 }
