@@ -48,7 +48,7 @@ public class SecurityConfig {
                 .cors()
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.POST, "/auth/authenticate", "/bookAuthor/**","/authors/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/auth/authenticate", "/bookAuthor/**","/authors/**","/users/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/authors/**", "/books/**", "/users/**", "/bookAuthor/**").permitAll() //@TODO:DELETE this line
                 .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll() // @FIXME:after testing set access to admin only .hasRole()
                 .requestMatchers(HttpMethod.PUT, "/users/**", "/authors/**", "/books/**", "/bookAuthor/**", "/users/**").permitAll()//@TODO:DELETE this line
