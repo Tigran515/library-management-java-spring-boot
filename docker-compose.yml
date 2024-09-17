@@ -1,0 +1,41 @@
+# @TODO: change build location, handle DB env and git ignore
+version: '3.8'
+services:
+  app:
+    #change to build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      #- "8080:8080"
+      - "8080:8888"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/library
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      SPRING_JPA_SHOW_SQL: true
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+    networks:
+      - library-network
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: library
+    ports:
+      - "3307:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./docker/mysql-init:/docker-entrypoint-initdb.d
+    networks:
+      - library-network
+
+volumes:
+  db-data:
+
+networks:
+  library-network:
