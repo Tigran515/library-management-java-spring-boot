@@ -1,10 +1,8 @@
-# @TODO: change build location, handle DB env and git ignore
+## @TODO: change build location, handle DB env and git ignore
 version: '3.8'
 services:
   app:
     build: .
-#      context: .
-#      dockerfile: Dockerfile
     ports:
       - "8888:8888"
     depends_on:
@@ -28,10 +26,9 @@ services:
       - "3307:3306"
     volumes:
       - db-data:/var/lib/mysql
-      - ./docker/mysql-init:/docker-entrypoint-initdb.d
+    #      - ./src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql
     networks:
       - library-network
-
 volumes:
   db-data:
 
