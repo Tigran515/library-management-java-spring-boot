@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +21,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtUtil jwtUtil;
+    @Value("${AUTHORIZATION_HEADER_KEY}")
+    private String requestAuthorizationHeader;
+    @Value("${AUTHORIZATION_HEADER_VALUE}")
+    private String requestAuthorizationHeaderValue;
 
     public JwtRequestFilter(UserDetailsServiceImpl userDetailsService, JwtUtil jwtUtil) {
         this.userDetailsService = userDetailsService;
@@ -28,11 +33,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        final String authorizationHeader = request.getHeader("Authorization");//@TODO move to .env
+//        final String authorizationHeader = request.getHeader("Authorization");//@TODO move to .env
+        final String authorizationHeader = request.getHeader(requestAuthorizationHeader);//@TODO move to .env
         String username = null;
         String jwt = null;
 
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {//@TODO move to .env
+//        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {//@TODO move to .env
+        if (authorizationHeader != null && authorizationHeader.startsWith(requestAuthorizationHeaderValue)) {//@TODO move to .env
             jwt = authorizationHeader.substring(7);
             username = jwtUtil.extractUsername(jwt);
         }

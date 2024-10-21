@@ -72,8 +72,8 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override //@TODO:🔥 Angular!! also make changes in the Client code
-    public AuthorDTO updateAuthorById(AuthorDTO updatedAuthorDTO) { //@TODO: !REFACTOR get the  id from AuthorDTO
-//        if (updatedAuthorDTO.getId() == null) { //the same logic is done in validation tool
+    public AuthorDTO updateAuthorById(AuthorDTO updatedAuthorDTO) { //@NOTE: REFACTORED! get the id from AuthorDTO
+//        if (updatedAuthorDTO.getId() == null) { //NOTE: the same logic is done in validation tool
 //            String errorMsg = "Cannot update the Author. The [ID=null]";
 //            LOGGER.error(errorMsg);
 //            throw new IllegalArgumentException(errorMsg);
