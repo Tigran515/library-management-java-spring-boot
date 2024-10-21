@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
         validationTool.validateByGroup(userUpdateRequest, PutValidation.class);
         User existingUser = userRepository.findById(userUpdateRequest.getId())
                 .orElseThrow(() -> {
-                    String errorMsg = "bla bla bla";
+                    String errorMsg = "User with [ID="+userUpdateRequest.getId()+"] was not found";
                     LOGGER.error(errorMsg);
                     return new NoSuchElementException(errorMsg); //✅
                 });
@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
         } else {
             beanCopyUtils.copyNonNullProperties(userUpdateRequest, existingUser);
             userRepository.save(existingUser);
-            LOGGER.info(MessageFormat.format("User with [id={0}] was updated", existingUser.getId()));
+            LOGGER.info(MessageFormat.format("User with [ID={0}] was updated", existingUser.getId()));
         }
         return userConverter.fromEntityToDto(existingUser);
     }
